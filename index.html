@@ -1,0 +1,2016 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- WebView & GitHub Anti-Cache Meta Tags -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>ADMIN - BD UNIQUE BAZAR</title>
+
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- html2canvas for Receipt Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Firebase Compat SDK (Works on GitHub, WebView & Local file://) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-soft: #eff6ff;
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --radius: 14px;
+            --shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 30px; }
+        button, input, select, textarea { font-family: inherit; }
+
+        /* Login Lock Screen */
+        .login-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #0f172a, #1e3a8a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 2000;
+        }
+        .login-card {
+            background: #fff;
+            width: 100%;
+            max-width: 390px;
+            border-radius: 18px;
+            padding: 28px 24px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+            text-align: center;
+        }
+        .login-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-size: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .login-card h2 {
+            font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--dark);
+            text-transform: uppercase;
+        }
+        .login-card p { font-size: 13px; color: var(--muted); margin: 4px 0 16px; }
+        .mode-hint-pill {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 11px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        /* Top Admin Header */
+        .admin-header {
+            background: var(--dark);
+            color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 150;
+            box-shadow: 0 3px 14px rgba(15, 23, 42, 0.18);
+        }
+        .header-top {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .brand { display: flex; align-items: center; gap: 10px; }
+        .brand img {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #38bdf8;
+            background: #fff;
+        }
+        .brand h1 {
+            font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            line-height: 1.15;
+        }
+        .brand small { display: block; font-size: 11px; color: #94a3b8; font-weight: 500; }
+
+        .mode-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(16, 185, 129, 0.16);
+            color: #34d399;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+        .mode-badge.offline {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+        .mode-badge span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 1.6s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .logout-mini-btn {
+            background: rgba(239, 68, 68, 0.16);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.35);
+            padding: 6px 11px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Scrollable Navigation Tabs */
+        .nav-tabs-wrap {
+            background: var(--dark-2);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .nav-tabs {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 8px 12px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .nav-tabs::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            white-space: nowrap;
+            background: transparent;
+            color: #cbd5e1;
+            border: 1px solid transparent;
+            padding: 7px 13px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 3px 10px rgba(37, 99, 235, 0.35);
+        }
+        .tab-badge {
+            background: var(--danger);
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 99px;
+            display: none;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1280px;
+            margin: 16px auto;
+            padding: 0 14px;
+        }
+        .view-section { display: none; animation: fadeIn 0.2s ease; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Cards & Grids */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        @media (min-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+        .stat-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .stat-card:active { transform: scale(0.98); }
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            flex-shrink: 0;
+        }
+        .stat-label { font-size: 12px; color: var(--muted); font-weight: 600; }
+        .stat-val { font-size: 21px; font-weight: 800; color: var(--dark); line-height: 1.2; }
+
+        .panel-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .panel-head h3 { font-size: 17px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+        /* Buttons & Forms */
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 9px 14px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-success { background: var(--success); color: #fff; }
+        .btn-warning { background: var(--warning); color: #fff; }
+        .btn-danger { background: var(--danger); color: #fff; }
+        .btn-outline { background: #f8fafc; color: var(--text); border: 1px solid var(--border); }
+        .btn-sm { padding: 6px 10px; font-size: 12px; border-radius: 8px; }
+
+        .form-group { margin-bottom: 12px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 4px; }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+        }
+        .form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12); }
+        .grid-2 { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 640px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
+        .grid-3 { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        @media (min-width: 640px) { .grid-3 { grid-template-columns: 1fr 1fr 1fr; } }
+
+        /* Product List Cards */
+        .item-list { display: flex; flex-direction: column; gap: 10px; }
+        .prod-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fff;
+        }
+        .prod-row img { width: 62px; height: 62px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: #e2e8f0; }
+        .prod-meta { flex: 1; min-width: 0; }
+        .prod-name { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .prod-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+        .prod-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+        /* Image Preview */
+        .img-preview-box {
+            width: 100%;
+            height: 150px;
+            border: 1.5px dashed #cbd5e1;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #f8fafc;
+            margin-bottom: 10px;
+        }
+        .img-preview-box img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* Filter Pills */
+        .filter-pills { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 10px; scrollbar-width: none; }
+        .filter-pills::-webkit-scrollbar { display: none; }
+        .fpill {
+            white-space: nowrap;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            color: #475569;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .fpill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        /* Orders */
+        .order-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 13px;
+            background: #fff;
+            margin-bottom: 10px;
+        }
+        .order-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+        .status-pill { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+        .status-Pending { background: #fef3c7; color: #92400e; }
+        .status-Confirmed { background: #dbeafe; color: #1e40af; }
+        .status-Shipped { background: #e0e7ff; color: #3730a3; }
+        .status-Delivered { background: #dcfce7; color: #166534; }
+        .status-Cancelled { background: #fee2e2; color: #991b1b; }
+
+        .order-items-box {
+            background: #f8fafc;
+            border-radius: 9px;
+            padding: 8px 10px;
+            font-size: 13px;
+            margin: 8px 0;
+            border: 1px solid #eef2f7;
+        }
+        .order-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+            margin-top: 8px;
+        }
+
+        /* Live Chat Split Layout */
+        .chat-layout { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 768px) { .chat-layout { grid-template-columns: 310px 1fr; } }
+        .chat-list-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .chat-user-row {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+        .chat-user-row:hover { background: #f8fafc; }
+        .chat-user-row.active { background: var(--primary-soft); border-left: 4px solid var(--primary); }
+        .unread-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--danger); flex-shrink: 0; }
+        .chat-window {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            height: 70vh;
+            overflow: hidden;
+        }
+        .chat-win-head {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            background: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px;
+            background: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .msg-bubble {
+            max-width: 80%;
+            padding: 9px 13px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+        .msg-admin { align-self: flex-end; background: var(--primary); color: #fff; border-bottom-right-radius: 4px; }
+        .msg-customer { align-self: flex-start; background: #fff; color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+        .msg-time { font-size: 10px; opacity: 0.72; display: block; text-align: right; margin-top: 3px; }
+        .chat-input-bar {
+            display: flex;
+            gap: 8px;
+            padding: 10px 12px;
+            border-top: 1px solid var(--border);
+            background: #fff;
+        }
+
+        /* Icon Picker */
+        .icon-picker { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+        .icon-choice {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #475569;
+        }
+        .icon-choice.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            z-index: 1500;
+        }
+        .modal-box {
+            background: #fff;
+            width: 100%;
+            max-width: 560px;
+            max-height: 92vh;
+            border-radius: 16px;
+            overflow-y: auto;
+            animation: fadeIn 0.2s ease;
+        }
+        .modal-head {
+            position: sticky;
+            top: 0;
+            background: #fff;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 5;
+        }
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: #f1f5f9;
+            font-size: 19px;
+            cursor: pointer;
+        }
+        .modal-body { padding: 16px 18px 20px; }
+
+        /* Off-screen Receipt Area */
+        #receiptRenderArea {
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 420px;
+            background: #fff;
+            color: #1e293b;
+            padding: 24px;
+        }
+        .receipt-box { border: 2px solid #1e293b; border-radius: 10px; padding: 18px; }
+        .receipt-head { text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 10px; margin-bottom: 10px; }
+        .receipt-head h2 { font-size: 20px; color: #2563eb; text-transform: uppercase; }
+        .receipt-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 13px; }
+        .receipt-table th, .receipt-table td { border-bottom: 1px solid #e2e8f0; padding: 5px 4px; text-align: left; }
+        .receipt-table th:last-child, .receipt-table td:last-child { text-align: right; }
+
+        /* Toasts */
+        .toast-container {
+            position: fixed;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 90%;
+            max-width: 380px;
+            pointer-events: none;
+        }
+        .toast {
+            background: var(--dark);
+            color: #fff;
+            padding: 11px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toast.success { background: #059669; }
+        .toast.error { background: #dc2626; }
+
+        .empty-box { text-align: center; padding: 36px 14px; color: var(--muted); font-size: 14px; }
+        .empty-box i { font-size: 32px; color: #cbd5e1; display: block; margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Admin Login Lock Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-card">
+            <div class="login-icon"><i class="fas fa-shield-halved"></i></div>
+            <h2>BD UNIQUE BAZAR</h2>
+            <p>অ্যাডমিন কন্ট্রোল প্যানেল লগইন</p>
+            <div class="mode-hint-pill" id="loginModePill">🟢 ফায়ারবেস লাইভ কানেক্টেড</div>
+            <div class="form-group">
+                <label>অ্যাডমিন পাসওয়ার্ড দিন</label>
+                <input type="password" id="adminLoginPass" class="form-control" placeholder="ডিফল্ট পাসওয়ার্ড: admin123">
+            </div>
+            <button class="btn btn-primary" style="width:100%; padding:11px; font-size:15px;" id="loginSubmitBtn" onclick="attemptAdminLogin()">
+                <i class="fas fa-right-to-bracket"></i> প্রবেশ করুন
+            </button>
+        </div>
+    </div>
+
+    <!-- Sticky Header & Navigation -->
+    <header class="admin-header">
+        <div class="header-top">
+            <div class="brand">
+                <img id="adminHeaderLogo" src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Logo">
+                <div>
+                    <h1>BD UNIQUE BAZAR</h1>
+                    <small>রিয়েল-টাইম অ্যাডমিন প্যানেল</small>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span class="mode-badge" id="headerModeBadge"><span></span> LIVE</span>
+                <button class="logout-mini-btn" onclick="logoutAdmin()" title="লগআউট"><i class="fas fa-power-off"></i></button>
+            </div>
+        </div>
+        <div class="nav-tabs-wrap">
+            <div class="nav-tabs">
+                <button class="tab-btn active" data-tab="dashboard" onclick="switchTab('dashboard')"><i class="fas fa-chart-pie"></i> ড্যাশবোর্ড</button>
+                <button class="tab-btn" data-tab="orders" onclick="switchTab('orders')"><i class="fas fa-box"></i> অর্ডার <span class="tab-badge" id="pendingOrdersBadge">0</span></button>
+                <button class="tab-btn" data-tab="products" onclick="switchTab('products')"><i class="fas fa-bag-shopping"></i> পণ্য</button>
+                <button class="tab-btn" data-tab="categories" onclick="switchTab('categories')"><i class="fas fa-tags"></i> ক্যাটাগরি</button>
+                <button class="tab-btn" data-tab="chats" onclick="switchTab('chats')"><i class="fas fa-comments"></i> লাইভ চ্যাট <span class="tab-badge" id="unreadChatBadge">0</span></button>
+                <button class="tab-btn" data-tab="notifications" onclick="switchTab('notifications')"><i class="fas fa-bell"></i> নোটিফিকেশন</button>
+                <button class="tab-btn" data-tab="customers" onclick="switchTab('customers')"><i class="fas fa-users"></i> ক্রেতা ও রিভিউ</button>
+                <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')"><i class="fas fa-gear"></i> সেটিংস</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="container">
+
+        <!-- 1. DASHBOARD VIEW -->
+        <section class="view-section active" id="view-dashboard">
+            <div class="stats-grid">
+                <div class="stat-card" onclick="switchTab('orders')">
+                    <div class="stat-icon" style="background:#fef3c7; color:#d97706;"><i class="fas fa-clock"></i></div>
+                    <div><div class="stat-label">পেন্ডিং অর্ডার</div><div class="stat-val" id="statPendingOrders">0</div></div>
+                </div>
+                <div class="stat-card" onclick="switchTab('orders')">
+                    <div class="stat-icon" style="background:#dcfce7; color:#059669;"><i class="fas fa-bangladeshi-taka-sign"></i></div>
+                    <div><div class="stat-label">মোট বিক্রি (ডেলিভার্ড)</div><div class="stat-val" id="statTotalRevenue">৳0</div></div>
+                </div>
+                <div class="stat-card" onclick="switchTab('products')">
+                    <div class="stat-icon" style="background:#dbeafe; color:#2563eb;"><i class="fas fa-box-open"></i></div>
+                    <div><div class="stat-label">মোট পণ্য</div><div class="stat-val" id="statTotalProducts">0</div></div>
+                </div>
+                <div class="stat-card" onclick="switchTab('customers')">
+                    <div class="stat-icon" style="background:#f3e8ff; color:#7c3aed;"><i class="fas fa-users"></i></div>
+                    <div><div class="stat-label">নিবন্ধিত ক্রেতা</div><div class="stat-val" id="statTotalUsers">0</div></div>
+                </div>
+            </div>
+
+            <div class="panel-card">
+                <div class="panel-head">
+                    <h3><i class="fas fa-bolt" style="color:var(--warning);"></i> দ্রুত কাজ করুন</h3>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button class="btn btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> নতুন পণ্য যোগ</button>
+                    <button class="btn btn-success" onclick="switchTab('orders')"><i class="fas fa-truck-fast"></i> অর্ডার দেখুন</button>
+                    <button class="btn btn-warning" onclick="switchTab('notifications')"><i class="fas fa-bullhorn"></i> নোটিফিকেশন পাঠান</button>
+                    <button class="btn btn-outline" onclick="switchTab('chats')"><i class="fas fa-comments"></i> কাস্টমার চ্যাট</button>
+                </div>
+            </div>
+
+            <div class="panel-card">
+                <div class="panel-head">
+                    <h3><i class="fas fa-clock-rotate-left" style="color:var(--primary);"></i> সাম্প্রতিক অর্ডারসমূহ</h3>
+                    <button class="btn btn-outline btn-sm" onclick="switchTab('orders')">সব দেখুন</button>
+                </div>
+                <div id="recentOrdersBox"></div>
+            </div>
+        </section>
+
+        <!-- 2. ORDERS MANAGEMENT VIEW -->
+        <section class="view-section" id="view-orders">
+            <div class="panel-card">
+                <div class="panel-head">
+                    <h3><i class="fas fa-box" style="color:var(--primary);"></i> সকল অর্ডার ম্যানেজমেন্ট</h3>
+                    <input type="text" id="orderSearchInput" class="form-control" style="max-width:250px;" placeholder="অর্ডার আইডি / মোবাইল খুঁজুন..." oninput="renderOrders()">
+                </div>
+                <div class="filter-pills" id="orderFilterPills">
+                    <button class="fpill active" data-status="all" onclick="setOrderFilter('all')">সব</button>
+                    <button class="fpill" data-status="Pending" onclick="setOrderFilter('Pending')">Pending</button>
+                    <button class="fpill" data-status="Confirmed" onclick="setOrderFilter('Confirmed')">Confirmed</button>
+                    <button class="fpill" data-status="Shipped" onclick="setOrderFilter('Shipped')">Shipped</button>
+                    <button class="fpill" data-status="Delivered" onclick="setOrderFilter('Delivered')">Delivered</button>
+                    <button class="fpill" data-status="Cancelled" onclick="setOrderFilter('Cancelled')">Cancelled</button>
+                </div>
+                <div id="ordersListAdmin"></div>
+            </div>
+        </section>
+
+        <!-- 3. PRODUCTS MANAGEMENT VIEW -->
+        <section class="view-section" id="view-products">
+            <div class="panel-card">
+                <div class="panel-head">
+                    <h3><i class="fas fa-bag-shopping" style="color:var(--primary);"></i> পণ্য ম্যানেজমেন্ট</h3>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <input type="text" id="prodSearchInput" class="form-control" style="width:190px;" placeholder="পণ্য খুঁজুন..." oninput="renderAdminProducts()">
+                        <button class="btn btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> নতুন পণ্য</button>
+                    </div>
+                </div>
+                <div style="font-size:12px; color:var(--muted); margin-bottom:12px;">
+                    <i class="fas fa-circle-info"></i> সর্বশেষ যোগ করা বা "স্লাইডারে সামনে আনুন" দেওয়া ৫টি পণ্য কাস্টমার অ্যাপের অটো-স্লাইডারে দেখাবে।
+                </div>
+                <div class="item-list" id="adminProductsList"></div>
+            </div>
+        </section>
+
+        <!-- 4. DYNAMIC CATEGORIES VIEW -->
+        <section class="view-section" id="view-categories">
+            <div class="grid-2">
+                <div class="panel-card">
+                    <div class="panel-head">
+                        <h3 id="catFormHeading"><i class="fas fa-folder-plus" style="color:var(--primary);"></i> নতুন ক্যাটাগরি যোগ করুন</h3>
+                    </div>
+                    <input type="hidden" id="editCatId">
+                    <div class="form-group">
+                        <label>ক্যাটাগরির নাম *</label>
+                        <input type="text" id="catNameInput" class="form-control" placeholder="যেমন: মোবাইল অ্যাক্সেসরিজ">
+                    </div>
+                    <div class="form-group">
+                        <label>আইকন সিলেক্ট করুন (FontAwesome)</label>
+                        <input type="text" id="catIconInput" class="form-control" value="fa-tag" placeholder="যেমন: fa-shirt">
+                        <div class="icon-picker" id="iconPicker"></div>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn btn-primary" style="flex:1;" onclick="saveCategory()"><i class="fas fa-save"></i> সেভ করুন</button>
+                        <button class="btn btn-outline" id="cancelCatEditBtn" style="display:none;" onclick="resetCategoryForm()">বাতিল</button>
+                    </div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-head">
+                        <h3><i class="fas fa-tags" style="color:var(--success);"></i> বর্তমান ক্যাটাগরিসমূহ</h3>
+                    </div>
+                    <div class="item-list" id="adminCategoriesList"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. LIVE CHAT REPLY VIEW -->
+        <section class="view-section" id="view-chats">
+            <div class="chat-layout">
+                <div class="chat-list-box">
+                    <div style="padding:12px 14px; border-bottom:1px solid var(--border); font-weight:700; background:#f8fafc;">
+                        <i class="fas fa-inbox"></i> কাস্টমার মেসেজ তালিকা
+                    </div>
+                    <div id="chatUsersList"></div>
+                </div>
+
+                <div class="chat-window">
+                    <div class="chat-win-head">
+                        <div>
+                            <strong id="activeChatName">কোনো চ্যাট সিলেক্ট করা হয়নি</strong>
+                            <div id="activeChatMobile" style="font-size:12px; color:var(--muted);"></div>
+                        </div>
+                        <button class="btn btn-outline btn-sm" id="chatCallBtn" style="display:none;"><i class="fas fa-phone"></i> কল</button>
+                    </div>
+                    <div class="chat-messages" id="adminChatMessages">
+                        <div class="empty-box"><i class="fas fa-comments"></i>রিপ্লাই দিতে বাম দিক থেকে একজন কাস্টমার বেছে নিন।</div>
+                    </div>
+                    <div class="chat-input-bar">
+                        <input type="text" id="adminChatInput" class="form-control" placeholder="কাস্টমারকে রিপ্লাই লিখুন..." disabled>
+                        <button class="btn btn-primary" id="adminChatSendBtn" onclick="sendAdminReply()" disabled><i class="fas fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. NOTIFICATIONS CENTER VIEW -->
+        <section class="view-section" id="view-notifications">
+            <div class="grid-2">
+                <div class="panel-card">
+                    <div class="panel-head">
+                        <h3><i class="fas fa-bullhorn" style="color:var(--warning);"></i> নতুন নোটিফিকেশন পাঠান</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>কাদের কাছে পাঠাবেন?</label>
+                        <select id="notifTargetType" class="form-control" onchange="toggleNotifTargetMobile()">
+                            <option value="global">সকল কাস্টমার (Global Offer / Alert)</option>
+                            <option value="user">নির্দিষ্ট একজন কাস্টমার (মোবাইল নম্বর)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="notifMobileWrap" style="display:none;">
+                        <label>কাস্টমারের ১১ ডিজিট মোবাইল নম্বর *</label>
+                        <input type="tel" id="notifTargetMobile" class="form-control" maxlength="11" placeholder="017XXXXXXXX">
+                    </div>
+                    <div class="form-group">
+                        <label>নোটিফিকেশন শিরোনাম *</label>
+                        <input type="text" id="notifTitleInput" class="form-control" placeholder="যেমন: ধামাকা অফার চলছে!">
+                    </div>
+                    <div class="form-group">
+                        <label>বিস্তারিত বার্তা *</label>
+                        <textarea id="notifMsgInput" class="form-control" rows="3" placeholder="অফার বা জরুরি বার্তা এখানে লিখুন..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" style="width:100%;" onclick="sendNotification()">
+                        <i class="fas fa-paper-plane"></i> রিয়েল-টাইম নোটিফিকেশন পাঠান
+                    </button>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-head">
+                        <h3><i class="fas fa-bell" style="color:var(--primary);"></i> পাঠানো গ্লোবাল নোটিফিকেশন</h3>
+                    </div>
+                    <div class="item-list" id="globalNotifHistory"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. CUSTOMERS & REVIEWS VIEW -->
+        <section class="view-section" id="view-customers">
+            <div class="grid-2">
+                <div class="panel-card">
+                    <div class="panel-head">
+                        <h3><i class="fas fa-users" style="color:var(--primary);"></i> নিবন্ধিত ক্রেতারা</h3>
+                        <input type="text" id="custSearchInput" class="form-control" style="max-width:190px;" placeholder="নাম/মোবাইল..." oninput="renderCustomers()">
+                    </div>
+                    <div class="item-list" id="customersList"></div>
+                </div>
+
+                <div class="panel-card">
+                    <div class="panel-head">
+                        <h3><i class="fas fa-star" style="color:var(--warning);"></i> কাস্টমার রিভিউ মডারেশন</h3>
+                    </div>
+                    <div class="item-list" id="allReviewsList"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. SETTINGS & JSON BACKUP VIEW -->
+        <section class="view-section" id="view-settings">
+            <div class="grid-2">
+                <div class="panel-card">
+                    <div class="panel-head">
+                        <h3><i class="fas fa-sliders" style="color:var(--primary);"></i> শপ ও পেমেন্ট সেটিংস</h3>
+                    </div>
+                    <div class="form-group">
+                        <label>লোগো URL (অথবা নিচে ফাইল আপলোড করুন)</label>
+                        <input type="text" id="setLogoUrl" class="form-control" placeholder="https://...">
+                        <input type="file" id="setLogoFile" accept="image/*" class="form-control" style="margin-top:6px; padding:7px;" onchange="handleLogoFileUpload(this)">
+                    </div>
+                    <div class="form-group">
+                        <label>টপ নোটিশ বার (খালি রাখলে হাইড থাকবে)</label>
+                        <input type="text" id="setNoticeText" class="form-control" placeholder="🎉 সারাদেশে ক্যাশ অন ডেলিভারি!">
+                    </div>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>ডেলিভারি চার্জ (৳)</label>
+                            <input type="number" id="setDeliveryCharge" class="form-control" placeholder="60">
+                        </div>
+                        <div class="form-group">
+                            <label>বিকাশ নম্বর</label>
+                            <input type="tel" id="setBkash" class="form-control" placeholder="017XXXXXXXX">
+                        </div>
+                        <div class="form-group">
+                            <label>নগদ নম্বর</label>
+                            <input type="tel" id="setNagad" class="form-control" placeholder="018XXXXXXXX">
+                        </div>
+                    </div>
+                    <button class="btn btn-success" style="width:100%;" onclick="saveShopSettings()">
+                        <i class="fas fa-save"></i> সেটিংস আপডেট করুন
+                    </button>
+                </div>
+
+                <div>
+                    <!-- Admin Password Security -->
+                    <div class="panel-card">
+                        <div class="panel-head">
+                            <h3><i class="fas fa-key" style="color:var(--danger);"></i> অ্যাডমিন পাসওয়ার্ড পরিবর্তন</h3>
+                        </div>
+                        <div class="form-group">
+                            <label>নতুন অ্যাডমিন পাসওয়ার্ড</label>
+                            <input type="password" id="newAdminPassInput" class="form-control" placeholder="কমপক্ষে ৪ অক্ষর">
+                        </div>
+                        <button class="btn btn-danger" style="width:100%;" onclick="changeAdminPassword()">
+                            <i class="fas fa-lock"></i> পাসওয়ার্ড পরিবর্তন করুন
+                        </button>
+                    </div>
+
+                    <!-- JSON Backup & Import -->
+                    <div class="panel-card">
+                        <div class="panel-head">
+                            <h3><i class="fas fa-database" style="color:var(--primary);"></i> ডাটাবেইজ ব্যাকআপ ও ইমপোর্ট (JSON)</h3>
+                        </div>
+                        <p style="font-size:13px; color:var(--muted); margin-bottom:12px;">
+                            সব পণ্য, ক্যাটাগরি, অর্ডার, ক্রেতা ও সেটিংস এক ক্লিকে JSON ব্যাকআপ বা রিস্টোর করুন।
+                        </p>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button class="btn btn-primary" style="flex:1;" onclick="exportDatabaseJSON()">
+                                <i class="fas fa-download"></i> ব্যাকআপ ডাউনলোড
+                            </button>
+                            <label class="btn btn-outline" style="flex:1; cursor:pointer;">
+                                <i class="fas fa-upload"></i> JSON ইমপোর্ট
+                                <input type="file" accept=".json" style="display:none;" onchange="importDatabaseJSON(this)">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= MODALS ================= -->
+
+    <!-- Add / Edit Product Modal -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal-box">
+            <div class="modal-head">
+                <h3 id="prodModalTitle"><i class="fas fa-plus-circle"></i> নতুন পণ্য যোগ করুন</h3>
+                <button class="close-btn" onclick="closeModal('productModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editProdId">
+                <div class="img-preview-box" id="prodImgPreviewBox">
+                    <span style="font-size:13px; color:var(--muted);">ছবির প্রিভিউ এখানে দেখাবে</span>
+                </div>
+                <div class="form-group">
+                    <label>পণ্যের ছবির URL অথবা সরাসরি গ্যালারি থেকে আপলোড *</label>
+                    <input type="text" id="prodImageUrl" class="form-control" placeholder="https://..." oninput="updateProdPreview(this.value)">
+                    <input type="file" id="prodImageFile" accept="image/*" class="form-control" style="margin-top:6px; padding:7px;" onchange="handleProdImageFile(this)">
+                </div>
+                <div class="form-group">
+                    <label>পণ্যের নাম *</label>
+                    <input type="text" id="prodName" class="form-control" placeholder="যেমন: স্মার্ট ওয়াচ X12 প্রো">
+                </div>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label>বিক্রয় মূল্য (৳) *</label>
+                        <input type="number" id="prodPrice" class="form-control" placeholder="1250">
+                    </div>
+                    <div class="form-group">
+                        <label>আগের দাম (৳) (ঐচ্ছিক)</label>
+                        <input type="number" id="prodOldPrice" class="form-control" placeholder="1650">
+                    </div>
+                    <div class="form-group">
+                        <label>স্টক সংখ্যা *</label>
+                        <input type="number" id="prodStock" class="form-control" value="10">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>ক্যাটাগরি নির্বাচন করুন *</label>
+                    <select id="prodCategory" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label>পণ্যের বিস্তারিত বিবরণ</label>
+                    <textarea id="prodDesc" class="form-control" rows="3" placeholder="পণ্যের গুণাগুণ, সাইজ, ওয়ারেন্টি ইত্যাদি লিখুন..."></textarea>
+                </div>
+                <div class="form-group" id="bumpSliderWrap" style="display:none;">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" id="bumpToSliderCheck">
+                        <span>পণ্যটি নতুন পণ্যের ৫-স্লাইড অটো স্লাইডারে সবার সামনে আনুন</span>
+                    </label>
+                </div>
+                <button class="btn btn-primary" style="width:100%; padding:12px;" onclick="saveProduct()">
+                    <i class="fas fa-check-circle"></i> পণ্য সেভ করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div class="modal-overlay" id="receiptModal">
+        <div class="modal-box" style="max-width:450px;">
+            <div class="modal-head">
+                <h3><i class="fas fa-file-invoice"></i> অর্ডার রিসিট</h3>
+                <button class="close-btn" onclick="closeModal('receiptModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <img id="receiptPreviewImg" src="" style="width:100%; border-radius:10px; border:1px solid var(--border); margin-bottom:12px;" alt="Receipt">
+                <button class="btn btn-success" style="width:100%;" id="receiptDownloadBtn">
+                    <i class="fas fa-download"></i> রিসিট (JPG) ডাউনলোড করুন
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box" style="max-width:360px; padding:20px; text-align:center;">
+            <h3 id="confirmTitle" style="margin-bottom:8px;">নিশ্চিত করুন</h3>
+            <p id="confirmText" style="font-size:14px; color:var(--muted); margin-bottom:18px;"></p>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-outline" style="flex:1;" onclick="closeModal('confirmModal')">বাতিল</button>
+                <button class="btn btn-danger" style="flex:1;" id="confirmYesBtn">হ্যাঁ, নিশ্চিত</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Off-screen Receipt Render Area -->
+    <div id="receiptRenderArea"></div>
+
+    <!-- ================= FIREBASE LIVE ADMIN ENGINE ================= -->
+    <script>
+        // ============================================================
+        // BD UNIQUE BAZAR — Firebase Realtime Database Config
+        // নোট: আপনি যদি Singapore সার্ভার দিয়ে থাকেন, তবে databaseURL হবে:
+        // "https://bd-unique-bazar-default-rtdb.asia-southeast1.firebasedatabase.app"
+        // ============================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyCBMSVaRP4x6AosZmsnH8MFuuLI94xLbpY",
+            authDomain: "bd-unique-bazar.firebaseapp.com",
+            databaseURL: "https://bd-unique-bazar-default-rtdb.firebaseio.com",
+            projectId: "bd-unique-bazar",
+            storageBucket: "bd-unique-bazar.firebasestorage.app",
+            messagingSenderId: "153852663226",
+            appId: "1:153852663226:web:a772d91a7aa2eb1167b983",
+            measurementId: "G-DLN4CFL1NF"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const fbDb = firebase.database();
+
+        // Real-time Connection Indicator
+        fbDb.ref('.info/connected').on('value', (snap) => {
+            const connected = snap.val() === true;
+            const badge = document.getElementById('headerModeBadge');
+            const loginPill = document.getElementById('loginModePill');
+            if (connected) {
+                badge.classList.remove('offline');
+                badge.innerHTML = '<span></span> LIVE';
+                loginPill.innerText = '🟢 ফায়ারবেস লাইভ কানেক্টেড';
+                loginPill.style.background = '#dcfce7';
+                loginPill.style.color = '#166534';
+            } else {
+                badge.classList.add('offline');
+                badge.innerHTML = '<span></span> OFFLINE';
+                loginPill.innerText = '🟡 ফায়ারবেস কানেক্ট হচ্ছে...';
+                loginPill.style.background = '#fef3c7';
+                loginPill.style.color = '#92400e';
+            }
+        });
+
+        // ============================================================
+        // App State
+        // ============================================================
+        let settingsData = {};
+        let categoriesData = {};
+        let productsData = {};
+        let ordersData = {};
+        let usersData = {};
+        let reviewsData = {};
+        let chatsData = {};
+        let globalNotifsData = {};
+
+        let currentOrderFilter = 'all';
+        let activeChatMobile = null;
+        let activeChatRef = null;
+        let activeChatHandler = null;
+
+        const presetIcons = [
+            'fa-microchip', 'fa-shirt', 'fa-basket-shopping', 'fa-headphones',
+            'fa-mobile-screen', 'fa-shoe-prints', 'fa-clock', 'fa-gem',
+            'fa-couch', 'fa-spray-can-sparkles', 'fa-kitchen-set', 'fa-gift',
+            'fa-book', 'fa-gamepad', 'fa-dumbbell', 'fa-tag'
+        ];
+
+        // ============================================================
+        // Utilities
+        // ============================================================
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function formatDate(ts) {
+            if (!ts) return '';
+            return new Date(ts).toLocaleString('bn-BD', {
+                day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        function showToast(msg, type = 'info') {
+            const box = document.getElementById('toastContainer');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info';
+            el.innerHTML = `<i class="fas ${icon}"></i><span>${escapeHtml(msg)}</span>`;
+            box.appendChild(el);
+            setTimeout(() => el.remove(), 3400);
+        }
+
+        function showConfirm(title, text, onYes) {
+            document.getElementById('confirmTitle').innerText = title;
+            document.getElementById('confirmText').innerText = text;
+            document.getElementById('confirmYesBtn').onclick = () => {
+                closeModal('confirmModal');
+                onYes();
+            };
+            openModal('confirmModal');
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        document.querySelectorAll('.modal-overlay').forEach(ov => {
+            ov.addEventListener('click', (e) => {
+                if (e.target === ov) ov.style.display = 'none';
+            });
+        });
+
+        function compressImageToBase64(file, maxWidth = 720, quality = 0.76) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width, h = img.height;
+                        if (w > maxWidth) { h = Math.round((h * maxWidth) / w); w = maxWidth; }
+                        canvas.width = w; canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', quality));
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ============================================================
+        // Admin Login (Firebase RTDB backed + Timeout Protection)
+        // ============================================================
+        async function getStoredAdminPassword() {
+            try {
+                const timeout = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('timeout')), 4500)
+                );
+                const snap = await Promise.race([
+                    fbDb.ref('adminConfig/password').once('value'),
+                    timeout
+                ]);
+                if (snap.exists() && snap.val()) return String(snap.val()).trim();
+                await fbDb.ref('adminConfig/password').set('admin123');
+                return 'admin123';
+            } catch (e) {
+                console.warn("Firebase password check fallback:", e.message);
+                showToast("ফায়ারবেস রেসপন্স ধীর — databaseURL ও Rules চেক করুন", "error");
+                return 'admin123';
+            }
+        }
+
+        async function attemptAdminLogin() {
+            const inputEl = document.getElementById('adminLoginPass');
+            const btn = document.getElementById('loginSubmitBtn');
+            const inputPass = inputEl.value.trim();
+            if (!inputPass) return showToast("পাসওয়ার্ড লিখুন", "error");
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> যাচাই হচ্ছে...';
+
+            const realPass = await getStoredAdminPassword();
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-right-to-bracket"></i> প্রবেশ করুন';
+
+            if (inputPass === realPass) {
+                localStorage.setItem('bdUniqueAdminAuth', 'true');
+                document.getElementById('loginScreen').style.display = 'none';
+                inputEl.value = '';
+                showToast("অ্যাডমিন প্যানেলে স্বাগতম!", "success");
+                startAdminListeners();
+            } else {
+                showToast("পাসওয়ার্ড ভুল হয়েছে! (ডিফল্ট: admin123)", "error");
+            }
+        }
+
+        document.getElementById('adminLoginPass').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') attemptAdminLogin();
+        });
+
+        function logoutAdmin() {
+            showConfirm("লগআউট", "অ্যাডমিন প্যানেল থেকে লগআউট করতে চান?", () => {
+                localStorage.removeItem('bdUniqueAdminAuth');
+                location.reload();
+            });
+        }
+
+        async function changeAdminPassword() {
+            const newPass = document.getElementById('newAdminPassInput').value.trim();
+            if (newPass.length < 4) return showToast("কমপক্ষে ৪ অক্ষরের পাসওয়ার্ড দিন", "error");
+            try {
+                await fbDb.ref('adminConfig/password').set(newPass);
+                document.getElementById('newAdminPassInput').value = '';
+                showToast("অ্যাডমিন পাসওয়ার্ড আপডেট হয়েছে!", "success");
+            } catch (e) {
+                showToast("পাসওয়ার্ড পরিবর্তন করা যায়নি! Rules চেক করুন।", "error");
+            }
+        }
+
+        // ============================================================
+        // Navigation Tabs
+        // ============================================================
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
+            document.querySelectorAll('.view-section').forEach(v => v.classList.toggle('active', v.id === `view-${tabName}`));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ============================================================
+        // Real-Time Firebase Listeners
+        // ============================================================
+        function startAdminListeners() {
+            renderIconPicker();
+
+            fbDb.ref('settings').on('value', (snap) => {
+                settingsData = snap.val() || {};
+                populateSettingsForm();
+            });
+
+            fbDb.ref('categories').on('value', (snap) => {
+                categoriesData = snap.val() || {};
+                renderAdminCategories();
+                populateProductCategoryDropdown();
+                renderAdminProducts();
+            });
+
+            fbDb.ref('products').on('value', (snap) => {
+                productsData = snap.val() || {};
+                renderAdminProducts();
+                renderAllReviews();
+                updateDashboardStats();
+            });
+
+            fbDb.ref('orders').on('value', (snap) => {
+                ordersData = snap.val() || {};
+                renderOrders();
+                updateDashboardStats();
+            });
+
+            fbDb.ref('users').on('value', (snap) => {
+                usersData = snap.val() || {};
+                renderCustomers();
+                updateDashboardStats();
+            });
+
+            fbDb.ref('reviews').on('value', (snap) => {
+                reviewsData = snap.val() || {};
+                renderAllReviews();
+            });
+
+            fbDb.ref('chats').on('value', (snap) => {
+                chatsData = snap.val() || {};
+                renderChatUsersList();
+                updateDashboardStats();
+            });
+
+            fbDb.ref('notifications/global').on('value', (snap) => {
+                globalNotifsData = snap.val() || {};
+                renderGlobalNotifHistory();
+            });
+        }
+
+        // ============================================================
+        // 1. Dashboard Overview
+        // ============================================================
+        function updateDashboardStats() {
+            const ordersArr = Object.values(ordersData);
+            const pendingCount = ordersArr.filter(o => (o.status || 'Pending') === 'Pending').length;
+            const deliveredRev = ordersArr
+                .filter(o => o.status === 'Delivered')
+                .reduce((sum, o) => sum + Number(o.total || 0), 0);
+
+            document.getElementById('statPendingOrders').innerText = pendingCount;
+            document.getElementById('statTotalRevenue').innerText = `৳${deliveredRev}`;
+            document.getElementById('statTotalProducts').innerText = Object.keys(productsData).length;
+            document.getElementById('statTotalUsers').innerText = Object.keys(usersData).length;
+
+            const orderBadge = document.getElementById('pendingOrdersBadge');
+            orderBadge.innerText = pendingCount;
+            orderBadge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+
+            const unreadChats = Object.values(chatsData).filter(c => c.meta && c.meta.unreadAdmin).length;
+            const chatBadge = document.getElementById('unreadChatBadge');
+            chatBadge.innerText = unreadChats;
+            chatBadge.style.display = unreadChats > 0 ? 'inline-block' : 'none';
+
+            const recentBox = document.getElementById('recentOrdersBox');
+            const sorted = Object.entries(ordersData)
+                .map(([id, o]) => ({ id, ...o }))
+                .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+                .slice(0, 5);
+
+            if (sorted.length === 0) {
+                recentBox.innerHTML = `<div class="empty-box"><i class="fas fa-box-open"></i>এখনো কোনো অর্ডার আসেনি।</div>`;
+                return;
+            }
+            recentBox.innerHTML = sorted.map(o => `
+                <div class="prod-row" style="margin-bottom:8px; cursor:pointer;" onclick="switchTab('orders')">
+                    <div class="prod-meta">
+                        <div class="prod-name">#${escapeHtml(o.orderId || o.id)} — ${escapeHtml(o.customerName)}</div>
+                        <div class="prod-sub">${escapeHtml(o.contactMobile || o.userMobile)} • ৳${o.total} • ${formatDate(o.createdAt)}</div>
+                    </div>
+                    <span class="status-pill status-${escapeHtml(o.status || 'Pending')}">${escapeHtml(o.status || 'Pending')}</span>
+                </div>
+            `).join('');
+        }
+
+        // ============================================================
+        // 2. Orders Management + Auto Real-Time Customer Notification
+        // ============================================================
+        function setOrderFilter(status) {
+            currentOrderFilter = status;
+            document.querySelectorAll('#orderFilterPills .fpill').forEach(p => {
+                p.classList.toggle('active', p.dataset.status === status);
+            });
+            renderOrders();
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('ordersListAdmin');
+            const q = document.getElementById('orderSearchInput').value.trim().toLowerCase();
+
+            const list = Object.entries(ordersData)
+                .map(([key, o]) => ({ key, ...o }))
+                .filter(o => {
+                    const st = o.status || 'Pending';
+                    const matchStatus = currentOrderFilter === 'all' || st === currentOrderFilter;
+                    const matchQ = !q ||
+                        (o.orderId || o.key).toLowerCase().includes(q) ||
+                        (o.customerName || '').toLowerCase().includes(q) ||
+                        (o.userMobile || '').includes(q) ||
+                        (o.contactMobile || '').includes(q);
+                    return matchStatus && matchQ;
+                })
+                .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="empty-box"><i class="fas fa-box-open"></i>এই ফিল্টারে কোনো অর্ডার নেই।</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map(o => {
+                const itemsHtml = (o.items || []).map(i => `<div>• ${escapeHtml(i.name)} × ${i.qty} = ৳${i.price * i.qty}</div>`).join('');
+                const st = o.status || 'Pending';
+                return `
+                    <div class="order-card">
+                        <div class="order-head">
+                            <div>
+                                <strong style="font-size:15px;">#${escapeHtml(o.orderId || o.key)}</strong>
+                                <span style="font-size:12px; color:var(--muted); margin-left:6px;">${formatDate(o.createdAt)}</span>
+                            </div>
+                            <span class="status-pill status-${escapeHtml(st)}">${escapeHtml(st)}</span>
+                        </div>
+                        <div style="font-size:13px; line-height:1.55;">
+                            <strong>ক্রেতা:</strong> ${escapeHtml(o.customerName)} (${escapeHtml(o.contactMobile || o.userMobile)})<br>
+                            <strong>ঠিকানা:</strong> ${escapeHtml(o.address)}<br>
+                            <strong>পেমেন্ট:</strong> ${escapeHtml(o.paymentMethod)} ${o.trxId ? `| <strong>TrxID:</strong> ${escapeHtml(o.trxId)}` : ''}
+                        </div>
+                        <div class="order-items-box">
+                            ${itemsHtml}
+                            <div style="margin-top:5px; padding-top:5px; border-top:1px dashed #cbd5e1; font-weight:700; color:var(--primary);">
+                                সাবটোটাল: ৳${o.subtotal} + ডেলিভারি: ৳${o.deliveryCharge} = সর্বমোট ৳${o.total}
+                            </div>
+                        </div>
+                        <div class="order-footer">
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                <select class="form-control" style="width:auto; padding:6px 10px; font-size:12px;" onchange="updateOrderStatus('${o.key}', this.value)">
+                                    <option value="Pending" ${st === 'Pending' ? 'selected' : ''}>Pending</option>
+                                    <option value="Confirmed" ${st === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                                    <option value="Shipped" ${st === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                                    <option value="Delivered" ${st === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                                    <option value="Cancelled" ${st === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                                </select>
+                                <button class="btn btn-outline btn-sm" onclick="adminDownloadReceipt('${o.key}')"><i class="fas fa-file-invoice"></i> রিসিট</button>
+                                <a class="btn btn-success btn-sm" style="text-decoration:none;" href="tel:${escapeHtml(o.contactMobile || o.userMobile)}"><i class="fas fa-phone"></i> কল</a>
+                            </div>
+                            <button class="btn btn-danger btn-sm" onclick="deleteOrder('${o.key}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function updateOrderStatus(orderKey, newStatus) {
+            const order = ordersData[orderKey];
+            if (!order) return;
+            const statusLabels = {
+                Pending: 'পেন্ডিং অবস্থায় আছে।',
+                Confirmed: 'কনফার্ম করা হয়েছে! শীঘ্রই প্যাকিং শুরু হবে।',
+                Shipped: 'ডেলিভারির জন্য পাঠানো হয়েছে (Shipped)।',
+                Delivered: 'সফলভাবে ডেলিভারি সম্পন্ন হয়েছে! কেনাকাটার জন্য ধন্যবাদ।',
+                Cancelled: 'বাতিল (Cancelled) করা হয়েছে। বিস্তারিত জানতে লাইভ চ্যাটে যোগাযোগ করুন।'
+            };
+            try {
+                await fbDb.ref(`orders/${orderKey}`).update({ status: newStatus });
+                if (order.userMobile) {
+                    await fbDb.ref(`notifications/users/${order.userMobile}`).push({
+                        title: `অর্ডার আপডেট (#${order.orderId || orderKey})`,
+                        message: `আপনার অর্ডারটি ${statusLabels[newStatus] || newStatus}`,
+                        timestamp: Date.now(),
+                        read: false
+                    });
+                }
+                showToast(`স্ট্যাটাস "${newStatus}" আপডেট ও কাস্টমারকে নোটিফিকেশন পাঠানো হয়েছে!`, "success");
+            } catch (e) {
+                showToast("স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে!", "error");
+            }
+        }
+
+        function deleteOrder(orderKey) {
+            showConfirm("অর্ডার ডিলিট", `অর্ডার #${orderKey} স্থায়ীভাবে মুছে ফেলতে চান?`, async () => {
+                await fbDb.ref(`orders/${orderKey}`).remove();
+                showToast("অর্ডার ডিলিট হয়েছে", "info");
+            });
+        }
+
+        async function adminDownloadReceipt(orderKey) {
+            if (typeof html2canvas === 'undefined') {
+                return showToast("রিসিট তৈরি করতে ইন্টারনেট সংযোগ চালু রাখুন", "error");
+            }
+            const order = ordersData[orderKey];
+            if (!order) return;
+            const area = document.getElementById('receiptRenderArea');
+            const rows = (order.items || []).map(i => `<tr><td>${escapeHtml(i.name)}</td><td>${i.qty}</td><td>৳${i.price * i.qty}</td></tr>`).join('');
+            area.innerHTML = `
+                <div class="receipt-box">
+                    <div class="receipt-head">
+                        <h2>BD UNIQUE BAZAR</h2>
+                        <div style="font-size:12px; color:#475569;">অর্ডার ইনভয়েস / ক্যাশ মেমো</div>
+                        <div style="font-size:12px; margin-top:4px;"><strong>আইডি:</strong> ${escapeHtml(order.orderId || orderKey)} | <strong>তারিখ:</strong> ${formatDate(order.createdAt)}</div>
+                    </div>
+                    <div style="font-size:13px; line-height:1.5; margin-bottom:8px;">
+                        <div><strong>ক্রেতা:</strong> ${escapeHtml(order.customerName)}</div>
+                        <div><strong>মোবাইল:</strong> ${escapeHtml(order.contactMobile || order.userMobile)}</div>
+                        <div><strong>ঠিকানা:</strong> ${escapeHtml(order.address)}</div>
+                        <div><strong>পেমেন্ট:</strong> ${escapeHtml(order.paymentMethod)} ${order.trxId ? `(TrxID: ${escapeHtml(order.trxId)})` : ''}</div>
+                        <div><strong>স্ট্যাটাস:</strong> ${escapeHtml(order.status)}</div>
+                    </div>
+                    <table class="receipt-table">
+                        <thead><tr><th>পণ্য</th><th>পরিমাণ</th><th>মূল্য</th></tr></thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                    <div style="border-top:2px dashed #cbd5e1; padding-top:8px; font-size:14px;">
+                        <div style="display:flex; justify-content:space-between;"><span>সাবটোটাল:</span><span>৳${order.subtotal}</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span>ডেলিভারি চার্জ:</span><span>৳${order.deliveryCharge}</span></div>
+                        <div style="display:flex; justify-content:space-between; font-weight:700; font-size:16px; color:#2563eb; margin-top:5px;">
+                            <span>সর্বমোট:</span><span>৳${order.total}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            try {
+                const canvas = await html2canvas(area, { scale: 2, backgroundColor: '#ffffff' });
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                document.getElementById('receiptPreviewImg').src = imgData;
+                document.getElementById('receiptDownloadBtn').onclick = () => {
+                    const a = document.createElement('a');
+                    a.download = `Invoice_${order.orderId || orderKey}.jpg`;
+                    a.href = imgData;
+                    a.click();
+                };
+                openModal('receiptModal');
+            } catch (e) {
+                showToast("রিসিট তৈরি করা যায়নি", "error");
+            }
+        }
+
+        // ============================================================
+        // 3. Products Management
+        // ============================================================
+        function getCatName(catId) {
+            const c = categoriesData[catId];
+            if (!c) return catId || 'অন্যান্য';
+            return typeof c === 'string' ? c : (c.name || catId);
+        }
+
+        function populateProductCategoryDropdown() {
+            const sel = document.getElementById('prodCategory');
+            const prev = sel.value;
+            sel.innerHTML = '';
+            const entries = Object.entries(categoriesData);
+            if (entries.length === 0) {
+                sel.innerHTML = `<option value="general">সাধারণ</option>`;
+                return;
+            }
+            entries.forEach(([id, cat]) => {
+                const opt = document.createElement('option');
+                opt.value = id;
+                opt.textContent = typeof cat === 'string' ? cat : (cat.name || id);
+                sel.appendChild(opt);
+            });
+            if (prev) sel.value = prev;
+        }
+
+        function renderAdminProducts() {
+            const listEl = document.getElementById('adminProductsList');
+            const q = document.getElementById('prodSearchInput').value.trim().toLowerCase();
+            const entries = Object.entries(productsData)
+                .filter(([id, p]) => !q || (p.name || '').toLowerCase().includes(q) || getCatName(p.category).toLowerCase().includes(q))
+                .sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0));
+
+            if (entries.length === 0) {
+                listEl.innerHTML = `<div class="empty-box"><i class="fas fa-box-open"></i>কোনো পণ্য পাওয়া যায়নি। নতুন পণ্য যোগ করুন।</div>`;
+                return;
+            }
+
+            listEl.innerHTML = entries.map(([id, p], idx) => `
+                <div class="prod-row">
+                    <img src="${escapeHtml(p.image)}" alt="" onerror="this.src='https://via.placeholder.com/80'">
+                    <div class="prod-meta">
+                        <div class="prod-name">
+                            ${idx < 5 && !q ? '<span style="background:#dbeafe; color:#1d4ed8; font-size:10px; padding:1px 6px; border-radius:6px; margin-right:5px;">স্লাইডার</span>' : ''}
+                            ${escapeHtml(p.name)}
+                        </div>
+                        <div class="prod-sub">
+                            <strong style="color:var(--primary);">৳${p.price}</strong>
+                            ${p.oldPrice ? `<s style="margin-left:4px;">৳${p.oldPrice}</s>` : ''}
+                            • ${escapeHtml(getCatName(p.category))} • স্টক: <strong>${p.stock ?? 0}</strong>
+                        </div>
+                    </div>
+                    <div class="prod-actions">
+                        <button class="btn btn-outline btn-sm" onclick="openProductModal('${id}')"><i class="fas fa-pen"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteProduct('${id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateProdPreview(src) {
+            const box = document.getElementById('prodImgPreviewBox');
+            if (src && src.trim()) {
+                box.innerHTML = `<img src="${escapeHtml(src.trim())}" alt="Preview">`;
+            } else {
+                box.innerHTML = `<span style="font-size:13px; color:var(--muted);">ছবির প্রিভিউ এখানে দেখাবে</span>`;
+            }
+        }
+
+        async function handleProdImageFile(input) {
+            const file = input.files[0];
+            if (!file) return;
+            try {
+                showToast("ছবি প্রসেস হচ্ছে...", "info");
+                const b64 = await compressImageToBase64(file, 720, 0.76);
+                document.getElementById('prodImageUrl').value = b64;
+                updateProdPreview(b64);
+                showToast("ছবি রেডি হয়েছে!", "success");
+            } catch (e) {
+                showToast("ছবি লোড করতে সমস্যা হয়েছে", "error");
+            }
+        }
+
+        function openProductModal(prodId = null) {
+            populateProductCategoryDropdown();
+            document.getElementById('prodImageFile').value = '';
+            document.getElementById('bumpToSliderCheck').checked = false;
+
+            if (prodId && productsData[prodId]) {
+                const p = productsData[prodId];
+                document.getElementById('editProdId').value = prodId;
+                document.getElementById('prodModalTitle').innerHTML = '<i class="fas fa-pen-to-square"></i> পণ্য এডিট করুন';
+                document.getElementById('prodName').value = p.name || '';
+                document.getElementById('prodPrice').value = p.price || '';
+                document.getElementById('prodOldPrice').value = p.oldPrice || '';
+                document.getElementById('prodStock').value = p.stock ?? 0;
+                document.getElementById('prodCategory').value = p.category || '';
+                document.getElementById('prodImageUrl').value = p.image || '';
+                document.getElementById('prodDesc').value = p.description || '';
+                document.getElementById('bumpSliderWrap').style.display = 'block';
+                updateProdPreview(p.image || '');
+            } else {
+                document.getElementById('editProdId').value = '';
+                document.getElementById('prodModalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> নতুন পণ্য যোগ করুন';
+                document.getElementById('prodName').value = '';
+                document.getElementById('prodPrice').value = '';
+                document.getElementById('prodOldPrice').value = '';
+                document.getElementById('prodStock').value = '10';
+                document.getElementById('prodImageUrl').value = '';
+                document.getElementById('prodDesc').value = '';
+                document.getElementById('bumpSliderWrap').style.display = 'none';
+                updateProdPreview('');
+            }
+            openModal('productModal');
+        }
+
+        async function saveProduct() {
+            const editId = document.getElementById('editProdId').value;
+            const name = document.getElementById('prodName').value.trim();
+            const price = Number(document.getElementById('prodPrice').value);
+            const oldPriceVal = document.getElementById('prodOldPrice').value.trim();
+            const oldPrice = oldPriceVal ? Number(oldPriceVal) : null;
+            const stock = Number(document.getElementById('prodStock').value);
+            const category = document.getElementById('prodCategory').value;
+            const image = document.getElementById('prodImageUrl').value.trim();
+            const description = document.getElementById('prodDesc').value.trim();
+            const bumpSlider = document.getElementById('bumpToSliderCheck').checked;
+
+            if (!name || !price || !image || !category) {
+                return showToast("নাম, বিক্রয় মূল্য, ক্যাটাগরি এবং ছবি অবশ্যই দিন", "error");
+            }
+
+            const existingCreated = editId && productsData[editId] ? (productsData[editId].createdAt || Date.now()) : Date.now();
+            const payload = {
+                name, price, oldPrice,
+                stock: isNaN(stock) ? 0 : stock,
+                category, image, description,
+                createdAt: (editId && !bumpSlider) ? existingCreated : Date.now()
+            };
+
+            const id = editId || ('prod_' + Date.now());
+            try {
+                await fbDb.ref(`products/${id}`).set(payload);
+                showToast(editId ? "পণ্য আপডেট হয়েছে!" : "নতুন পণ্য লাইভ হয়েছে!", "success");
+                closeModal('productModal');
+            } catch (e) {
+                showToast("পণ্য সেভ করা যায়নি! Firebase Rules চেক করুন।", "error");
+            }
+        }
+
+        function deleteProduct(id) {
+            const name = productsData[id]?.name || id;
+            showConfirm("পণ্য ডিলিট", `"${name}" পণ্যটি স্থায়ীভাবে মুছে ফেলতে চান?`, async () => {
+                await fbDb.ref(`products/${id}`).remove();
+                showToast("পণ্য ডিলিট হয়েছে", "info");
+            });
+        }
+
+        // ============================================================
+        // 4. Dynamic Categories
+        // ============================================================
+        function renderIconPicker() {
+            const box = document.getElementById('iconPicker');
+            const current = document.getElementById('catIconInput').value;
+            box.innerHTML = presetIcons.map(ic => `
+                <div class="icon-choice ${current === ic ? 'active' : ''}" onclick="pickCategoryIcon('${ic}')">
+                    <i class="fas ${ic}"></i>
+                </div>
+            `).join('');
+        }
+
+        function pickCategoryIcon(ic) {
+            document.getElementById('catIconInput').value = ic;
+            renderIconPicker();
+        }
+
+        function renderAdminCategories() {
+            const list = document.getElementById('adminCategoriesList');
+            const entries = Object.entries(categoriesData);
+            if (entries.length === 0) {
+                list.innerHTML = `<div class="empty-box"><i class="fas fa-tags"></i>কোনো ক্যাটাগরি নেই।</div>`;
+                return;
+            }
+            list.innerHTML = entries.map(([id, cat]) => {
+                const name = typeof cat === 'string' ? cat : (cat.name || id);
+                const icon = (typeof cat === 'object' && cat.icon) ? cat.icon : 'fa-tag';
+                return `
+                    <div class="prod-row">
+                        <div class="stat-icon" style="background:var(--primary-soft); color:var(--primary); width:40px; height:40px;">
+                            <i class="fas ${escapeHtml(icon)}"></i>
+                        </div>
+                        <div class="prod-meta">
+                            <div class="prod-name">${escapeHtml(name)}</div>
+                            <div class="prod-sub">ID: ${escapeHtml(id)}</div>
+                        </div>
+                        <div class="prod-actions">
+                            <button class="btn btn-outline btn-sm" onclick="editCategory('${id}')"><i class="fas fa-pen"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteCategory('${id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function editCategory(id) {
+            const cat = categoriesData[id];
+            if (!cat) return;
+            document.getElementById('editCatId').value = id;
+            document.getElementById('catNameInput').value = typeof cat === 'string' ? cat : (cat.name || '');
+            document.getElementById('catIconInput').value = (typeof cat === 'object' && cat.icon) ? cat.icon : 'fa-tag';
+            document.getElementById('catFormHeading').innerHTML = '<i class="fas fa-pen"></i> ক্যাটাগরি এডিট করুন';
+            document.getElementById('cancelCatEditBtn').style.display = 'inline-flex';
+            renderIconPicker();
+        }
+
+        function resetCategoryForm() {
+            document.getElementById('editCatId').value = '';
+            document.getElementById('catNameInput').value = '';
+            document.getElementById('catIconInput').value = 'fa-tag';
+            document.getElementById('catFormHeading').innerHTML = '<i class="fas fa-folder-plus" style="color:var(--primary);"></i> নতুন ক্যাটাগরি যোগ করুন';
+            document.getElementById('cancelCatEditBtn').style.display = 'none';
+            renderIconPicker();
+        }
+
+        async function saveCategory() {
+            const editId = document.getElementById('editCatId').value;
+            const name = document.getElementById('catNameInput').value.trim();
+            const icon = document.getElementById('catIconInput').value.trim() || 'fa-tag';
+            if (!name) return showToast("ক্যাটাগরির নাম লিখুন", "error");
+
+            const catId = editId || ('cat_' + Date.now());
+            try {
+                await fbDb.ref(`categories/${catId}`).set({ name, icon });
+                resetCategoryForm();
+                showToast("ক্যাটাগরি রিয়েল-টাইম আপডেট হয়েছে!", "success");
+            } catch (e) {
+                showToast("ক্যাটাগরি সেভ করা যায়নি!", "error");
+            }
+        }
+
+        function deleteCategory(id) {
+            showConfirm("ক্যাটাগরি ডিলিট", `ক্যাটাগরিটি মুছে ফেলতে চান?`, async () => {
+                await fbDb.ref(`categories/${id}`).remove();
+                showToast("ক্যাটাগরি ডিলিট হয়েছে", "info");
+            });
+        }
+
+        // ============================================================
+        // 5. Live Chat Reply
+        // ============================================================
+        function renderChatUsersList() {
+            const box = document.getElementById('chatUsersList');
+            const list = Object.entries(chatsData)
+                .map(([mobile, data]) => ({
+                    mobile,
+                    name: data.meta?.customerName || usersData[mobile]?.name || mobile,
+                    lastMessage: data.meta?.lastMessage || 'মেসেজ দেখুন...',
+                    lastTime: data.meta?.lastTime || 0,
+                    unread: Boolean(data.meta?.unreadAdmin)
+                }))
+                .sort((a, b) => b.lastTime - a.lastTime);
+
+            if (list.length === 0) {
+                box.innerHTML = `<div class="empty-box"><i class="fas fa-comments"></i>কোনো চ্যাট নেই।</div>`;
+                return;
+            }
+            box.innerHTML = list.map(c => `
+                <div class="chat-user-row ${activeChatMobile === c.mobile ? 'active' : ''}" onclick="openCustomerChat('${c.mobile}')">
+                    <div style="min-width:0; flex:1;">
+                        <div style="font-weight:700; font-size:14px;">${escapeHtml(c.name)}</div>
+                        <div style="font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            ${escapeHtml(c.lastMessage)}
+                        </div>
+                    </div>
+                    ${c.unread ? '<span class="unread-dot"></span>' : ''}
+                </div>
+            `).join('');
+        }
+
+        function openCustomerChat(mobile) {
+            activeChatMobile = mobile;
+            const name = chatsData[mobile]?.meta?.customerName || usersData[mobile]?.name || mobile;
+            document.getElementById('activeChatName').innerText = name;
+            document.getElementById('activeChatMobile').innerText = mobile;
+
+            const callBtn = document.getElementById('chatCallBtn');
+            callBtn.style.display = 'inline-flex';
+            callBtn.onclick = () => { window.location.href = `tel:${mobile}`; };
+
+            document.getElementById('adminChatInput').disabled = false;
+            document.getElementById('adminChatSendBtn').disabled = false;
+
+            fbDb.ref(`chats/${mobile}/meta`).update({ unreadAdmin: false });
+            renderChatUsersList();
+
+            if (activeChatRef && activeChatHandler) {
+                activeChatRef.off('value', activeChatHandler);
+            }
+            activeChatRef = fbDb.ref(`chats/${mobile}/messages`);
+            activeChatHandler = (snap) => {
+                const msgBox = document.getElementById('adminChatMessages');
+                msgBox.innerHTML = '';
+                const arr = Object.values(snap.val() || {}).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+                if (arr.length === 0) {
+                    msgBox.innerHTML = `<div class="empty-box">কোনো মেসেজ নেই।</div>`;
+                    return;
+                }
+                arr.forEach(m => {
+                    const div = document.createElement('div');
+                    div.className = `msg-bubble ${m.sender === 'admin' ? 'msg-admin' : 'msg-customer'}`;
+                    div.innerHTML = `${escapeHtml(m.text)}<span class="msg-time">${formatDate(m.timestamp)}</span>`;
+                    msgBox.appendChild(div);
+                });
+                msgBox.scrollTop = msgBox.scrollHeight;
+            };
+            activeChatRef.on('value', activeChatHandler);
+        }
+
+        async function sendAdminReply() {
+            if (!activeChatMobile) return;
+            const input = document.getElementById('adminChatInput');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+            const now = Date.now();
+            try {
+                await fbDb.ref(`chats/${activeChatMobile}/messages`).push({ sender: 'admin', text, timestamp: now });
+                await fbDb.ref(`chats/${activeChatMobile}/meta`).update({
+                    lastMessage: `অ্যাডমিন: ${text}`, lastTime: now, unreadAdmin: false
+                });
+            } catch (e) {
+                showToast("রিপ্লাই পাঠানো যায়নি!", "error");
+            }
+        }
+
+        document.getElementById('adminChatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendAdminReply();
+        });
+
+        // ============================================================
+        // 6. Notifications
+        // ============================================================
+        function toggleNotifTargetMobile() {
+            const type = document.getElementById('notifTargetType').value;
+            document.getElementById('notifMobileWrap').style.display = type === 'user' ? 'block' : 'none';
+        }
+
+        async function sendNotification() {
+            const target = document.getElementById('notifTargetType').value;
+            const mobile = document.getElementById('notifTargetMobile').value.trim();
+            const title = document.getElementById('notifTitleInput').value.trim();
+            const message = document.getElementById('notifMsgInput').value.trim();
+
+            if (!title || !message) return showToast("শিরোনাম ও বার্তা লিখুন", "error");
+            if (target === 'user' && !/^01[3-9]\d{8}$/.test(mobile)) {
+                return showToast("সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন", "error");
+            }
+
+            try {
+                if (target === 'global') {
+                    await fbDb.ref('notifications/global').push({ title, message, timestamp: Date.now() });
+                    showToast("সব কাস্টমারের জন্য নোটিফিকেশন পাঠানো হয়েছে!", "success");
+                } else {
+                    await fbDb.ref(`notifications/users/${mobile}`).push({ title, message, timestamp: Date.now(), read: false });
+                    showToast(`${mobile} নম্বরে নোটিফিকেশন পাঠানো হয়েছে!`, "success");
+                }
+                document.getElementById('notifTitleInput').value = '';
+                document.getElementById('notifMsgInput').value = '';
+            } catch (e) {
+                showToast("নোটিফিকেশন পাঠানো যায়নি!", "error");
+            }
+        }
+
+        function renderGlobalNotifHistory() {
+            const box = document.getElementById('globalNotifHistory');
+            const list = Object.entries(globalNotifsData)
+                .map(([id, n]) => ({ id, ...n }))
+                .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            if (list.length === 0) {
+                box.innerHTML = `<div class="empty-box"><i class="fas fa-bell-slash"></i>কোনো গ্লোবাল নোটিফিকেশন নেই।</div>`;
+                return;
+            }
+            box.innerHTML = list.map(n => `
+                <div class="prod-row">
+                    <div class="prod-meta">
+                        <div class="prod-name">📢 ${escapeHtml(n.title)}</div>
+                        <div class="prod-sub">${escapeHtml(n.message)}<br>${formatDate(n.timestamp)}</div>
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="deleteGlobalNotif('${n.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function deleteGlobalNotif(id) {
+            showConfirm("নোটিফিকেশন ডিলিট", "এই নোটিফিকেশনটি মুছে ফেলতে চান?", async () => {
+                await fbDb.ref(`notifications/global/${id}`).remove();
+                showToast("নোটিফিকেশন ডিলিট হয়েছে", "info");
+            });
+        }
+
+        // ============================================================
+        // 7. Customers & Reviews
+        // ============================================================
+        function renderCustomers() {
+            const box = document.getElementById('customersList');
+            const q = document.getElementById('custSearchInput').value.trim().toLowerCase();
+            const list = Object.entries(usersData)
+                .map(([mobile, u]) => ({ mobile, ...u }))
+                .filter(u => !q || (u.name || '').toLowerCase().includes(q) || u.mobile.includes(q))
+                .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+            if (list.length === 0) {
+                box.innerHTML = `<div class="empty-box"><i class="fas fa-users"></i>কোনো ক্রেতা পাওয়া যায়নি।</div>`;
+                return;
+            }
+            box.innerHTML = list.map(u => `
+                <div class="prod-row">
+                    <div class="prod-meta">
+                        <div class="prod-name">${escapeHtml(u.name || 'নাম নেই')} (${escapeHtml(u.mobile)})</div>
+                        <div class="prod-sub">গ্রাম: ${escapeHtml(u.village || '-')}, থানা: ${escapeHtml(u.thana || '-')}, জেলা: ${escapeHtml(u.district || '-')}</div>
+                    </div>
+                    <div class="prod-actions">
+                        <button class="btn btn-outline btn-sm" onclick="quickNotifyUser('${u.mobile}')"><i class="fas fa-bell"></i></button>
+                        <button class="btn btn-primary btn-sm" onclick="switchTab('chats'); openCustomerChat('${u.mobile}');"><i class="fas fa-comment"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function quickNotifyUser(mobile) {
+            switchTab('notifications');
+            document.getElementById('notifTargetType').value = 'user';
+            toggleNotifTargetMobile();
+            document.getElementById('notifTargetMobile').value = mobile;
+        }
+
+        function renderAllReviews() {
+            const box = document.getElementById('allReviewsList');
+            const all = [];
+            for (const [prodId, revs] of Object.entries(reviewsData)) {
+                for (const [revId, r] of Object.entries(revs || {})) {
+                    all.push({ prodId, revId, prodName: productsData[prodId]?.name || prodId, ...r });
+                }
+            }
+            all.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+            if (all.length === 0) {
+                box.innerHTML = `<div class="empty-box"><i class="fas fa-star"></i>কোনো রিভিউ নেই।</div>`;
+                return;
+            }
+            box.innerHTML = all.map(r => `
+                <div class="prod-row">
+                    <div class="prod-meta">
+                        <div class="prod-name">${escapeHtml(r.prodName)} <span style="color:var(--warning); font-size:12px;">${'★'.repeat(r.rating || 5)}</span></div>
+                        <div class="prod-sub"><strong>${escapeHtml(r.userName || r.userMobile)}:</strong> ${escapeHtml(r.comment)}</div>
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="deleteReview('${r.prodId}', '${r.revId}')"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function deleteReview(prodId, revId) {
+            showConfirm("রিভিউ ডিলিট", "এই রিভিউটি মুছে ফেলতে চান?", async () => {
+                await fbDb.ref(`reviews/${prodId}/${revId}`).remove();
+                showToast("রিভিউ ডিলিট হয়েছে", "info");
+            });
+        }
+
+        // ============================================================
+        // 8. Settings & JSON Backup
+        // ============================================================
+        function populateSettingsForm() {
+            document.getElementById('setLogoUrl').value = settingsData.logoUrl || '';
+            document.getElementById('setNoticeText').value = settingsData.noticeText || '';
+            document.getElementById('setDeliveryCharge').value = settingsData.deliveryCharge ?? 60;
+            document.getElementById('setBkash').value = settingsData.bkashNumber || '';
+            document.getElementById('setNagad').value = settingsData.nagadNumber || '';
+            if (settingsData.logoUrl) document.getElementById('adminHeaderLogo').src = settingsData.logoUrl;
+        }
+
+        async function handleLogoFileUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const b64 = await compressImageToBase64(file, 260, 0.85);
+            document.getElementById('setLogoUrl').value = b64;
+            document.getElementById('adminHeaderLogo').src = b64;
+            showToast("লোগো প্রসেস হয়েছে! এখন সেভ বাটনে ক্লিক করুন।", "success");
+        }
+
+        async function saveShopSettings() {
+            const payload = {
+                shopName: "BD UNIQUE BAZAR",
+                logoUrl: document.getElementById('setLogoUrl').value.trim(),
+                noticeText: document.getElementById('setNoticeText').value.trim(),
+                deliveryCharge: Number(document.getElementById('setDeliveryCharge').value || 0),
+                bkashNumber: document.getElementById('setBkash').value.trim(),
+                nagadNumber: document.getElementById('setNagad').value.trim()
+            };
+            try {
+                await fbDb.ref('settings').update(payload);
+                showToast("শপ সেটিংস রিয়েল-টাইম আপডেট হয়েছে!", "success");
+            } catch (e) {
+                showToast("সেটিংস সেভ করা যায়নি!", "error");
+            }
+        }
+
+        async function exportDatabaseJSON() {
+            try {
+                const snap = await fbDb.ref('/').once('value');
+                const blob = new Blob([JSON.stringify(snap.val() || {}, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `BD_UNIQUE_BAZAR_BACKUP_${new Date().toISOString().slice(0, 10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast("JSON ব্যাকআপ ডাউনলোড হয়েছে!", "success");
+            } catch (e) {
+                showToast("ব্যাকআপ তৈরি করতে সমস্যা হয়েছে!", "error");
+            }
+        }
+
+        function importDatabaseJSON(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    showConfirm("ডাটাবেইজ ইমপোর্ট", "নতুন JSON ডাটা ইমপোর্ট করলে বর্তমান ডাটা রিপ্লেস হয়ে যাবে। নিশ্চিত?", async () => {
+                        await fbDb.ref('/').set(parsed);
+                        showToast("ডাটাবেইজ রিস্টোর হয়েছে!", "success");
+                    });
+                } catch (err) {
+                    showToast("JSON ফাইলটি সঠিক নয়!", "error");
+                }
+                input.value = '';
+            };
+            reader.readAsText(file);
+        }
+
+        // Boot Check
+        if (localStorage.getItem('bdUniqueAdminAuth') === 'true') {
+            document.getElementById('loginScreen').style.display = 'none';
+            startAdminListeners();
+        }
+    </script>
+</body>
+</html>
