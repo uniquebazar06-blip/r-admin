@@ -9,12 +9,12 @@
     <meta http-equiv="Expires" content="0">
     <title>ADMIN - BD UNIQUE BAZAR</title>
 
-    <!-- Google Fonts & Icons -->
+    <!-- Google Fonts & FontAwesome 6.5.2 -->
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <!-- html2canvas for Receipt Download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- Firebase Compat SDK (Works on GitHub, WebView & Local file://) -->
+    <!-- Firebase Compat SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
@@ -38,10 +38,11 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); overflow-x: hidden; padding-bottom: 30px; }
+        html, body { max-width: 100%; overflow-x: hidden; background: var(--bg); color: var(--text); }
+        body { padding-bottom: 34px; }
         button, input, select, textarea { font-family: inherit; }
 
-        /* Login Lock Screen */
+        /* Login Screen */
         .login-screen {
             position: fixed;
             inset: 0;
@@ -80,7 +81,7 @@
             color: var(--dark);
             text-transform: uppercase;
         }
-        .login-card p { font-size: 13px; color: var(--muted); margin: 4px 0 16px; }
+        .login-card p { font-size: 13px; color: var(--muted); margin: 4px 0 14px; }
         .mode-hint-pill {
             display: inline-block;
             font-size: 11px;
@@ -88,11 +89,11 @@
             padding: 4px 11px;
             border-radius: 20px;
             margin-bottom: 16px;
-            background: #dcfce7;
-            color: #166534;
+            background: #fef3c7;
+            color: #92400e;
         }
 
-        /* Top Admin Header */
+        /* Header & Tabs */
         .admin-header {
             background: var(--dark);
             color: #fff;
@@ -140,17 +141,8 @@
             padding: 4px 10px;
             border-radius: 20px;
         }
-        .mode-badge.offline {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-        }
-        .mode-badge span {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: currentColor;
-            animation: pulse 1.6s infinite;
-        }
+        .mode-badge.offline { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .mode-badge span { width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: pulse 1.6s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
         .logout-mini-btn {
@@ -164,11 +156,7 @@
             cursor: pointer;
         }
 
-        /* Scrollable Navigation Tabs */
-        .nav-tabs-wrap {
-            background: var(--dark-2);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
+        .nav-tabs-wrap { background: var(--dark-2); border-top: 1px solid rgba(255, 255, 255, 0.08); }
         .nav-tabs {
             max-width: 1280px;
             margin: 0 auto;
@@ -192,44 +180,20 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            position: relative;
             transition: 0.2s;
         }
-        .tab-btn.active {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 3px 10px rgba(37, 99, 235, 0.35);
-        }
-        .tab-badge {
-            background: var(--danger);
-            color: #fff;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 1px 6px;
-            border-radius: 99px;
-            display: none;
-        }
+        .tab-btn.active { background: var(--primary); color: #fff; box-shadow: 0 3px 10px rgba(37, 99, 235, 0.35); }
+        .tab-badge { background: var(--danger); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 99px; display: none; }
 
-        /* Main Container */
-        .container {
-            max-width: 1280px;
-            margin: 16px auto;
-            padding: 0 14px;
-        }
+        /* Container & Views */
+        .container { max-width: 1280px; margin: 16px auto; padding: 0 14px; }
         .view-section { display: none; animation: fadeIn 0.2s ease; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Cards & Grids */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 18px;
-        }
-        @media (min-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(4, 1fr); }
-        }
+        /* Stats & Panel Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 18px; }
+        @media (min-width: 768px) { .stats-grid { grid-template-columns: repeat(4, 1fr); } }
         .stat-card {
             background: var(--card);
             border-radius: var(--radius);
@@ -240,9 +204,7 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            transition: transform 0.2s;
         }
-        .stat-card:active { transform: scale(0.98); }
         .stat-icon {
             width: 44px;
             height: 44px;
@@ -288,7 +250,8 @@
             gap: 6px;
             transition: 0.2s;
         }
-        .btn:active { transform: scale(0.97); }
+        .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+        .btn:active:not(:disabled) { transform: scale(0.97); }
         .btn-primary { background: var(--primary); color: #fff; }
         .btn-success { background: var(--success); color: #fff; }
         .btn-warning { background: var(--warning); color: #fff; }
@@ -313,7 +276,7 @@
         .grid-3 { display: grid; grid-template-columns: 1fr; gap: 10px; }
         @media (min-width: 640px) { .grid-3 { grid-template-columns: 1fr 1fr 1fr; } }
 
-        /* Product List Cards */
+        /* Item Lists */
         .item-list { display: flex; flex-direction: column; gap: 10px; }
         .prod-row {
             display: flex;
@@ -324,28 +287,126 @@
             border-radius: 12px;
             background: #fff;
         }
-        .prod-row img { width: 62px; height: 62px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: #e2e8f0; }
+        .prod-row img { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: #e2e8f0; }
         .prod-meta { flex: 1; min-width: 0; }
         .prod-name { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .prod-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
         .prod-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+        .code-pill {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 6px;
+            margin-right: 4px;
+        }
+        .slider-pill {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 6px;
+            margin-right: 4px;
+        }
 
-        /* Image Preview */
-        .img-preview-box {
-            width: 100%;
-            height: 150px;
+        /* Multi-Image Uploader Grid (Up to 5 Images) */
+        .multi-img-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 480px) { .multi-img-grid { grid-template-columns: repeat(3, 1fr); } }
+        .img-slot {
+            position: relative;
+            aspect-ratio: 1 / 1;
+            border-radius: 10px;
             border: 1.5px dashed #cbd5e1;
-            border-radius: 12px;
+            background: #f8fafc;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-            background: #f8fafc;
-            margin-bottom: 10px;
         }
-        .img-preview-box img { width: 100%; height: 100%; object-fit: contain; }
+        .img-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .img-slot-remove {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(239, 68, 68, 0.92);
+            color: #fff;
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .img-slot-main {
+            position: absolute;
+            bottom: 3px;
+            left: 3px;
+            background: rgba(37, 99, 235, 0.9);
+            color: #fff;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 5px;
+        }
+        .upload-drop-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 11px;
+            border: 1.5px dashed var(--primary);
+            border-radius: 10px;
+            background: var(--primary-soft);
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
 
-        /* Filter Pills */
+        /* Extensive Icon Picker (85+ Icons) */
+        .icon-picker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
+            gap: 6px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding: 8px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-top: 6px;
+        }
+        .icon-choice {
+            height: 38px;
+            border-radius: 9px;
+            border: 1px solid var(--border);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #334155;
+            font-size: 15px;
+            transition: 0.15s;
+        }
+        .icon-choice:hover { border-color: var(--primary); color: var(--primary); }
+        .icon-choice.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+        /* Filter Pills & Orders */
         .filter-pills { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 10px; scrollbar-width: none; }
         .filter-pills::-webkit-scrollbar { display: none; }
         .fpill {
@@ -361,14 +422,7 @@
         }
         .fpill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-        /* Orders */
-        .order-card {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 13px;
-            background: #fff;
-            margin-bottom: 10px;
-        }
+        .order-card { border: 1px solid var(--border); border-radius: 12px; padding: 13px; background: #fff; margin-bottom: 10px; }
         .order-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
         .status-pill { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
         .status-Pending { background: #fef3c7; color: #92400e; }
@@ -376,109 +430,51 @@
         .status-Shipped { background: #e0e7ff; color: #3730a3; }
         .status-Delivered { background: #dcfce7; color: #166534; }
         .status-Cancelled { background: #fee2e2; color: #991b1b; }
-
-        .order-items-box {
-            background: #f8fafc;
-            border-radius: 9px;
-            padding: 8px 10px;
-            font-size: 13px;
-            margin: 8px 0;
-            border: 1px solid #eef2f7;
-        }
-        .order-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            border-top: 1px solid var(--border);
-            padding-top: 10px;
-            margin-top: 8px;
-        }
+        .order-items-box { background: #f8fafc; border-radius: 9px; padding: 8px 10px; font-size: 13px; margin: 8px 0; border: 1px solid #eef2f7; }
+        .order-footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 8px; }
 
         /* Live Chat Split Layout */
         .chat-layout { display: grid; grid-template-columns: 1fr; gap: 12px; }
         @media (min-width: 768px) { .chat-layout { grid-template-columns: 310px 1fr; } }
-        .chat-list-box {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-        .chat-user-row {
-            padding: 12px 14px;
-            border-bottom: 1px solid var(--border);
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-        }
+        .chat-list-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; max-height: 70vh; overflow-y: auto; }
+        .chat-user-row { padding: 12px 14px; border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
         .chat-user-row:hover { background: #f8fafc; }
         .chat-user-row.active { background: var(--primary-soft); border-left: 4px solid var(--primary); }
         .unread-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--danger); flex-shrink: 0; }
-        .chat-window {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            display: flex;
-            flex-direction: column;
-            height: 70vh;
-            overflow: hidden;
-        }
-        .chat-win-head {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border);
-            background: #f8fafc;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 14px;
-            background: #f1f5f9;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .msg-bubble {
-            max-width: 80%;
-            padding: 9px 13px;
-            border-radius: 14px;
-            font-size: 14px;
-            line-height: 1.45;
-            word-break: break-word;
-        }
+        .chat-window { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); display: flex; flex-direction: column; height: 70vh; overflow: hidden; }
+        .chat-win-head { padding: 12px 15px; border-bottom: 1px solid var(--border); background: #f8fafc; display: flex; justify-content: space-between; align-items: center; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 14px; background: #f1f5f9; display: flex; flex-direction: column; gap: 8px; }
+        .msg-bubble { max-width: 82%; padding: 9px 13px; border-radius: 14px; font-size: 14px; line-height: 1.45; word-break: break-word; }
         .msg-admin { align-self: flex-end; background: var(--primary); color: #fff; border-bottom-right-radius: 4px; }
         .msg-customer { align-self: flex-start; background: #fff; color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
-        .msg-time { font-size: 10px; opacity: 0.72; display: block; text-align: right; margin-top: 3px; }
-        .chat-input-bar {
-            display: flex;
-            gap: 8px;
-            padding: 10px 12px;
-            border-top: 1px solid var(--border);
-            background: #fff;
+        .msg-img { max-width: 210px; border-radius: 9px; display: block; margin-bottom: 5px; cursor: pointer; }
+        .msg-code-link {
+            display: inline-block;
+            background: #fef3c7;
+            color: #92400e;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 2px 0;
+            border: 1px solid #fcd34d;
         }
-
-        /* Icon Picker */
-        .icon-picker { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
-        .icon-choice {
-            width: 36px;
-            height: 36px;
-            border-radius: 9px;
+        .msg-time { font-size: 10px; opacity: 0.72; display: block; text-align: right; margin-top: 3px; }
+        .chat-input-bar { display: flex; gap: 7px; padding: 10px 12px; border-top: 1px solid var(--border); background: #fff; align-items: center; }
+        .chat-img-label {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             border: 1px solid var(--border);
             background: #f8fafc;
+            color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 16px;
             cursor: pointer;
-            color: #475569;
+            flex-shrink: 0;
         }
-        .icon-choice.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
         /* Modals */
         .modal-overlay {
@@ -489,50 +485,16 @@
             display: none;
             justify-content: center;
             align-items: center;
-            padding: 16px;
+            padding: 14px;
             z-index: 1500;
         }
-        .modal-box {
-            background: #fff;
-            width: 100%;
-            max-width: 560px;
-            max-height: 92vh;
-            border-radius: 16px;
-            overflow-y: auto;
-            animation: fadeIn 0.2s ease;
-        }
-        .modal-head {
-            position: sticky;
-            top: 0;
-            background: #fff;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 5;
-        }
-        .close-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: none;
-            background: #f1f5f9;
-            font-size: 19px;
-            cursor: pointer;
-        }
+        .modal-box { background: #fff; width: 100%; max-width: 600px; max-height: 92vh; border-radius: 16px; overflow-y: auto; animation: fadeIn 0.2s ease; }
+        .modal-head { position: sticky; top: 0; background: #fff; padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; z-index: 5; }
+        .close-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: #f1f5f9; font-size: 19px; cursor: pointer; }
         .modal-body { padding: 16px 18px 20px; }
 
-        /* Off-screen Receipt Area */
-        #receiptRenderArea {
-            position: fixed;
-            left: -9999px;
-            top: 0;
-            width: 420px;
-            background: #fff;
-            color: #1e293b;
-            padding: 24px;
-        }
+        /* Receipt Render Area */
+        #receiptRenderArea { position: fixed; left: -9999px; top: 0; width: 420px; background: #fff; color: #1e293b; padding: 24px; }
         .receipt-box { border: 2px solid #1e293b; border-radius: 10px; padding: 18px; }
         .receipt-head { text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 10px; margin-bottom: 10px; }
         .receipt-head h2 { font-size: 20px; color: #2563eb; text-transform: uppercase; }
@@ -540,32 +502,9 @@
         .receipt-table th, .receipt-table td { border-bottom: 1px solid #e2e8f0; padding: 5px 4px; text-align: left; }
         .receipt-table th:last-child, .receipt-table td:last-child { text-align: right; }
 
-        /* Toasts */
-        .toast-container {
-            position: fixed;
-            top: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 3000;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            width: 90%;
-            max-width: 380px;
-            pointer-events: none;
-        }
-        .toast {
-            background: var(--dark);
-            color: #fff;
-            padding: 11px 16px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        /* Toast */
+        .toast-container { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 3000; display: flex; flex-direction: column; gap: 8px; width: 90%; max-width: 380px; pointer-events: none; }
+        .toast { background: var(--dark); color: #fff; padding: 11px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); display: flex; align-items: center; gap: 8px; }
         .toast.success { background: #059669; }
         .toast.error { background: #dc2626; }
 
@@ -583,8 +522,8 @@
         <div class="login-card">
             <div class="login-icon"><i class="fas fa-shield-halved"></i></div>
             <h2>BD UNIQUE BAZAR</h2>
-            <p>অ্যাডমিন কন্ট্রোল প্যানেল লগইন</p>
-            <div class="mode-hint-pill" id="loginModePill">🟢 ফায়ারবেস লাইভ কানেক্টেড</div>
+            <p>অ্যাডমিন কন্ট্রোল প্যানেল লগইন (v2.0.0)</p>
+            <div class="mode-hint-pill" id="loginModePill">🟡 ফায়ারবেস কানেক্ট হচ্ছে...</div>
             <div class="form-group">
                 <label>অ্যাডমিন পাসওয়ার্ড দিন</label>
                 <input type="password" id="adminLoginPass" class="form-control" placeholder="ডিফল্ট পাসওয়ার্ড: admin123">
@@ -602,7 +541,7 @@
                 <img id="adminHeaderLogo" src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Logo">
                 <div>
                     <h1>BD UNIQUE BAZAR</h1>
-                    <small>রিয়েল-টাইম অ্যাডমিন প্যানেল</small>
+                    <small>অ্যাডমিন প্যানেল • ImgBB + Firebase v2.0.0</small>
                 </div>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
@@ -619,7 +558,7 @@
                 <button class="tab-btn" data-tab="chats" onclick="switchTab('chats')"><i class="fas fa-comments"></i> লাইভ চ্যাট <span class="tab-badge" id="unreadChatBadge">0</span></button>
                 <button class="tab-btn" data-tab="notifications" onclick="switchTab('notifications')"><i class="fas fa-bell"></i> নোটিফিকেশন</button>
                 <button class="tab-btn" data-tab="customers" onclick="switchTab('customers')"><i class="fas fa-users"></i> ক্রেতা ও রিভিউ</button>
-                <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')"><i class="fas fa-gear"></i> সেটিংস</button>
+                <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')"><i class="fas fa-gear"></i> সেটিংস ও ভার্সন</button>
             </div>
         </div>
     </header>
@@ -651,6 +590,10 @@
             <div class="panel-card">
                 <div class="panel-head">
                     <h3><i class="fas fa-bolt" style="color:var(--warning);"></i> দ্রুত কাজ করুন</h3>
+                    <div style="display:flex; gap:6px; align-items:center;">
+                        <input type="text" id="quickCodeLookup" class="form-control" style="width:165px; padding:7px 10px; font-size:13px;" placeholder="কোড খুঁজুন (BUB-1001)">
+                        <button class="btn btn-outline btn-sm" onclick="lookupProductByCodeInput()"><i class="fas fa-search"></i></button>
+                    </div>
                 </div>
                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
                     <button class="btn btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> নতুন পণ্য যোগ</button>
@@ -669,12 +612,12 @@
             </div>
         </section>
 
-        <!-- 2. ORDERS MANAGEMENT VIEW -->
+        <!-- 2. ORDERS VIEW -->
         <section class="view-section" id="view-orders">
             <div class="panel-card">
                 <div class="panel-head">
                     <h3><i class="fas fa-box" style="color:var(--primary);"></i> সকল অর্ডার ম্যানেজমেন্ট</h3>
-                    <input type="text" id="orderSearchInput" class="form-control" style="max-width:250px;" placeholder="অর্ডার আইডি / মোবাইল খুঁজুন..." oninput="renderOrders()">
+                    <input type="text" id="orderSearchInput" class="form-control" style="max-width:260px;" placeholder="অর্ডার আইডি / মোবাইল / পণ্য কোড..." oninput="renderOrders()">
                 </div>
                 <div class="filter-pills" id="orderFilterPills">
                     <button class="fpill active" data-status="all" onclick="setOrderFilter('all')">সব</button>
@@ -688,24 +631,24 @@
             </div>
         </section>
 
-        <!-- 3. PRODUCTS MANAGEMENT VIEW -->
+        <!-- 3. PRODUCTS VIEW -->
         <section class="view-section" id="view-products">
             <div class="panel-card">
                 <div class="panel-head">
                     <h3><i class="fas fa-bag-shopping" style="color:var(--primary);"></i> পণ্য ম্যানেজমেন্ট</h3>
                     <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                        <input type="text" id="prodSearchInput" class="form-control" style="width:190px;" placeholder="পণ্য খুঁজুন..." oninput="renderAdminProducts()">
+                        <input type="text" id="prodSearchInput" class="form-control" style="width:205px;" placeholder="নাম বা কোড (BUB-...) খুঁজুন" oninput="renderAdminProducts()">
                         <button class="btn btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> নতুন পণ্য</button>
                     </div>
                 </div>
                 <div style="font-size:12px; color:var(--muted); margin-bottom:12px;">
-                    <i class="fas fa-circle-info"></i> সর্বশেষ যোগ করা বা "স্লাইডারে সামনে আনুন" দেওয়া ৫টি পণ্য কাস্টমার অ্যাপের অটো-স্লাইডারে দেখাবে।
+                    <i class="fas fa-circle-info"></i> প্রতিটি পণ্যে সর্বোচ্চ ৫টি ছবি (ImgBB অটো-আপলোড), YouTube/TikTok ভিডিও লিংক ও ইউনিক কোড যুক্ত থাকবে। সর্বশেষ ৫টি পণ্য অটো-স্লাইডারে দেখাবে।
                 </div>
                 <div class="item-list" id="adminProductsList"></div>
             </div>
         </section>
 
-        <!-- 4. DYNAMIC CATEGORIES VIEW -->
+        <!-- 4. DYNAMIC CATEGORIES VIEW (85+ Icons) -->
         <section class="view-section" id="view-categories">
             <div class="grid-2">
                 <div class="panel-card">
@@ -718,9 +661,15 @@
                         <input type="text" id="catNameInput" class="form-control" placeholder="যেমন: মোবাইল অ্যাক্সেসরিজ">
                     </div>
                     <div class="form-group">
-                        <label>আইকন সিলেক্ট করুন (FontAwesome)</label>
-                        <input type="text" id="catIconInput" class="form-control" value="fa-tag" placeholder="যেমন: fa-shirt">
-                        <div class="icon-picker" id="iconPicker"></div>
+                        <label>আইকন নির্বাচন করুন (<span id="iconCountLabel">0</span>টি আইকন)</label>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <div id="selectedIconPreview" class="stat-icon" style="background:var(--primary-soft); color:var(--primary); width:40px; height:40px;">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <input type="text" id="catIconSearch" class="form-control" placeholder="আইকন খুঁজুন (যেমন: shirt, phone, watch, shoe...)" oninput="renderIconPicker()">
+                        </div>
+                        <input type="hidden" id="catIconInput" value="fa-tag">
+                        <div class="icon-picker-grid" id="iconPicker"></div>
                     </div>
                     <div style="display:flex; gap:8px;">
                         <button class="btn btn-primary" style="flex:1;" onclick="saveCategory()"><i class="fas fa-save"></i> সেভ করুন</button>
@@ -756,9 +705,13 @@
                         <button class="btn btn-outline btn-sm" id="chatCallBtn" style="display:none;"><i class="fas fa-phone"></i> কল</button>
                     </div>
                     <div class="chat-messages" id="adminChatMessages">
-                        <div class="empty-box"><i class="fas fa-comments"></i>রিপ্লাই দিতে বাম দিক থেকে একজন কাস্টমার বেছে নিন।</div>
+                        <div class="empty-box"><i class="fas fa-comments"></i>রিপ্লাই দিতে বাম দিক থেকে একজন কাস্টমার বেছে নিন।<br><small>কাস্টমার পণ্যের কোড (BUB-XXXX) লিখলে তাতে ক্লিক করলেই পণ্য দেখতে পারবেন।</small></div>
                     </div>
                     <div class="chat-input-bar">
+                        <label class="chat-img-label" id="adminChatImgLabel" title="ছবি পাঠান (ImgBB)" style="opacity:0.5; pointer-events:none;">
+                            <i class="fas fa-image"></i>
+                            <input type="file" id="adminChatImgInput" accept="image/*" style="display:none;" onchange="sendAdminChatImage(this)">
+                        </label>
                         <input type="text" id="adminChatInput" class="form-control" placeholder="কাস্টমারকে রিপ্লাই লিখুন..." disabled>
                         <button class="btn btn-primary" id="adminChatSendBtn" onclick="sendAdminReply()" disabled><i class="fas fa-paper-plane"></i></button>
                     </div>
@@ -793,7 +746,7 @@
                         <textarea id="notifMsgInput" class="form-control" rows="3" placeholder="অফার বা জরুরি বার্তা এখানে লিখুন..."></textarea>
                     </div>
                     <button class="btn btn-primary" style="width:100%;" onclick="sendNotification()">
-                        <i class="fas fa-paper-plane"></i> রিয়েল-টাইম নোটিফিকেশন পাঠান
+                        <i class="fas fa-paper-plane"></i> নোটিফিকেশন পাঠান
                     </button>
                 </div>
 
@@ -826,15 +779,15 @@
             </div>
         </section>
 
-        <!-- 8. SETTINGS & JSON BACKUP VIEW -->
+        <!-- 8. SETTINGS, VERSIONING & JSON BACKUP VIEW -->
         <section class="view-section" id="view-settings">
             <div class="grid-2">
                 <div class="panel-card">
                     <div class="panel-head">
-                        <h3><i class="fas fa-sliders" style="color:var(--primary);"></i> শপ ও পেমেন্ট সেটিংস</h3>
+                        <h3><i class="fas fa-sliders" style="color:var(--primary);"></i> শপ, পেমেন্ট ও ভার্সন সেটিংস</h3>
                     </div>
                     <div class="form-group">
-                        <label>লোগো URL (অথবা নিচে ফাইল আপলোড করুন)</label>
+                        <label>লোগো URL (অথবা গ্যালারি থেকে ImgBB-তে আপলোড করুন)</label>
                         <input type="text" id="setLogoUrl" class="form-control" placeholder="https://...">
                         <input type="file" id="setLogoFile" accept="image/*" class="form-control" style="margin-top:6px; padding:7px;" onchange="handleLogoFileUpload(this)">
                     </div>
@@ -856,8 +809,19 @@
                             <input type="tel" id="setNagad" class="form-control" placeholder="018XXXXXXXX">
                         </div>
                     </div>
+
+                    <!-- Auto Version Control for GitHub Updates -->
+                    <div class="form-group" style="background:#eff6ff; padding:12px; border-radius:10px; border:1px solid #bfdbfe;">
+                        <label style="color:#1e40af;"><i class="fas fa-code-branch"></i> কাস্টমার অ্যাপ ভার্সন (গিটহাব অটো আপডেট কন্ট্রোল)</label>
+                        <div style="display:flex; gap:8px;">
+                            <input type="text" id="setAppVersion" class="form-control" placeholder="2.0.0">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="bumpAppVersion()">+ ভার্সন বাড়ান</button>
+                        </div>
+                        <small style="color:#475569; display:block; margin-top:4px;">গিটহাবে কোড পরিবর্তন করলে এখান থেকে ভার্সন বাড়ালেই কাস্টমারের ফোনে অটো আপডেট বার চলে যাবে।</small>
+                    </div>
+
                     <button class="btn btn-success" style="width:100%;" onclick="saveShopSettings()">
-                        <i class="fas fa-save"></i> সেটিংস আপডেট করুন
+                        <i class="fas fa-save"></i> সব সেটিংস আপডেট করুন
                     </button>
                 </div>
 
@@ -902,7 +866,7 @@
 
     <!-- ================= MODALS ================= -->
 
-    <!-- Add / Edit Product Modal -->
+    <!-- Add / Edit Product Modal (5 ImgBB Photos + Video Link + Auto Product Code) -->
     <div class="modal-overlay" id="productModal">
         <div class="modal-box">
             <div class="modal-head">
@@ -911,18 +875,42 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" id="editProdId">
-                <div class="img-preview-box" id="prodImgPreviewBox">
-                    <span style="font-size:13px; color:var(--muted);">ছবির প্রিভিউ এখানে দেখাবে</span>
-                </div>
+
+                <!-- 5-Image ImgBB Uploader -->
                 <div class="form-group">
-                    <label>পণ্যের ছবির URL অথবা সরাসরি গ্যালারি থেকে আপলোড *</label>
-                    <input type="text" id="prodImageUrl" class="form-control" placeholder="https://..." oninput="updateProdPreview(this.value)">
-                    <input type="file" id="prodImageFile" accept="image/*" class="form-control" style="margin-top:6px; padding:7px;" onchange="handleProdImageFile(this)">
+                    <label>পণ্যের ছবি (সর্বোচ্চ ৫টি — ImgBB-তে অটো আপলোড হবে) *</label>
+                    <div class="multi-img-grid" id="multiImgGrid"></div>
+                    <label class="upload-drop-btn" id="multiUploadLabel">
+                        <i class="fas fa-cloud-arrow-up"></i>
+                        <span>গ্যালারি থেকে ১–৫টি ছবি সিলেক্ট করুন (ImgBB)</span>
+                        <input type="file" id="prodMultiFileInput" accept="image/*" multiple style="display:none;" onchange="handleMultiImageUpload(this)">
+                    </label>
+                    <div style="display:flex; gap:6px;">
+                        <input type="url" id="manualImgUrlInput" class="form-control" placeholder="অথবা ছবির সরাসরি URL দিয়ে যোগ করুন">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="addManualImageUrl()">যোগ</button>
+                    </div>
                 </div>
+
+                <!-- Product Code + Name -->
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>পণ্যের ইউনিক কোড (অটো তৈরি হয়) *</label>
+                        <div style="display:flex; gap:6px;">
+                            <input type="text" id="prodCode" class="form-control" style="font-weight:700; color:var(--primary);" placeholder="BUB-1001">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="regenerateProductCode()" title="নতুন কোড তৈরি"><i class="fas fa-dice"></i></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>ক্যাটাগরি নির্বাচন করুন *</label>
+                        <select id="prodCategory" class="form-control"></select>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label>পণ্যের নাম *</label>
                     <input type="text" id="prodName" class="form-control" placeholder="যেমন: স্মার্ট ওয়াচ X12 প্রো">
                 </div>
+
                 <div class="grid-3">
                     <div class="form-group">
                         <label>বিক্রয় মূল্য (৳) *</label>
@@ -937,24 +925,40 @@
                         <input type="number" id="prodStock" class="form-control" value="10">
                     </div>
                 </div>
+
+                <!-- YouTube / TikTok Video Link -->
                 <div class="form-group">
-                    <label>ক্যাটাগরি নির্বাচন করুন *</label>
-                    <select id="prodCategory" class="form-control"></select>
+                    <label><i class="fab fa-youtube" style="color:#ef4444;"></i> / <i class="fab fa-tiktok"></i> ভিডিও লিংক (YouTube বা TikTok — ঐচ্ছিক)</label>
+                    <input type="url" id="prodVideoUrl" class="form-control" placeholder="https://youtube.com/... বা https://tiktok.com/...">
                 </div>
+
                 <div class="form-group">
                     <label>পণ্যের বিস্তারিত বিবরণ</label>
-                    <textarea id="prodDesc" class="form-control" rows="3" placeholder="পণ্যের গুণাগুণ, সাইজ, ওয়ারেন্টি ইত্যাদি লিখুন..."></textarea>
+                    <textarea id="prodDesc" class="form-control" rows="3" placeholder="পণ্যের গুণাগুণ, সাইজ, কালার, ওয়ারেন্টি ইত্যাদি লিখুন..."></textarea>
                 </div>
+
                 <div class="form-group" id="bumpSliderWrap" style="display:none;">
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
                         <input type="checkbox" id="bumpToSliderCheck">
                         <span>পণ্যটি নতুন পণ্যের ৫-স্লাইড অটো স্লাইডারে সবার সামনে আনুন</span>
                     </label>
                 </div>
-                <button class="btn btn-primary" style="width:100%; padding:12px;" onclick="saveProduct()">
+
+                <button class="btn btn-primary" id="saveProdBtn" style="width:100%; padding:12px;" onclick="saveProduct()">
                     <i class="fas fa-check-circle"></i> পণ্য সেভ করুন
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Quick Product Info Modal (When clicking Product Code in Chat or Quick Search) -->
+    <div class="modal-overlay" id="quickProdModal">
+        <div class="modal-box" style="max-width:420px;">
+            <div class="modal-head">
+                <h3><i class="fas fa-barcode"></i> পণ্যের দ্রুত তথ্য</h3>
+                <button class="close-btn" onclick="closeModal('quickProdModal')">&times;</button>
+            </div>
+            <div class="modal-body" id="quickProdBody"></div>
         </div>
     </div>
 
@@ -974,7 +978,7 @@
         </div>
     </div>
 
-    <!-- Custom Confirm Modal -->
+    <!-- Confirm Modal -->
     <div class="modal-overlay" id="confirmModal">
         <div class="modal-box" style="max-width:360px; padding:20px; text-align:center;">
             <h3 id="confirmTitle" style="margin-bottom:8px;">নিশ্চিত করুন</h3>
@@ -986,16 +990,18 @@
         </div>
     </div>
 
-    <!-- Off-screen Receipt Render Area -->
+    <!-- Off-screen Receipt Area -->
     <div id="receiptRenderArea"></div>
 
-    <!-- ================= FIREBASE LIVE ADMIN ENGINE ================= -->
+    <!-- ================= FIREBASE + IMGBB ADMIN ENGINE ================= -->
     <script>
         // ============================================================
-        // BD UNIQUE BAZAR — Firebase Realtime Database Config
-        // নোট: আপনি যদি Singapore সার্ভার দিয়ে থাকেন, তবে databaseURL হবে:
-        // "https://bd-unique-bazar-default-rtdb.asia-southeast1.firebasedatabase.app"
+        // 1. CONFIGURATION (Firebase + ImgBB)
         // ============================================================
+        const IMGBB_API_KEY = "eddb89bbce58d882cf0a41da7af0d62d";
+
+        // নোট: Singapore সার্ভার হলে databaseURL হবে:
+        // "https://bd-unique-bazar-default-rtdb.asia-southeast1.firebasedatabase.app"
         const firebaseConfig = {
             apiKey: "AIzaSyCBMSVaRP4x6AosZmsnH8MFuuLI94xLbpY",
             authDomain: "bd-unique-bazar.firebaseapp.com",
@@ -1007,33 +1013,68 @@
             measurementId: "G-DLN4CFL1NF"
         };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const fbDb = firebase.database();
 
-        // Real-time Connection Indicator
+        // Connection Status Indicator
         fbDb.ref('.info/connected').on('value', (snap) => {
             const connected = snap.val() === true;
             const badge = document.getElementById('headerModeBadge');
-            const loginPill = document.getElementById('loginModePill');
+            const pill = document.getElementById('loginModePill');
             if (connected) {
                 badge.classList.remove('offline');
                 badge.innerHTML = '<span></span> LIVE';
-                loginPill.innerText = '🟢 ফায়ারবেস লাইভ কানেক্টেড';
-                loginPill.style.background = '#dcfce7';
-                loginPill.style.color = '#166534';
+                pill.innerText = '🟢 ফায়ারবেস লাইভ কানেক্টেড';
+                pill.style.background = '#dcfce7';
+                pill.style.color = '#166534';
             } else {
                 badge.classList.add('offline');
                 badge.innerHTML = '<span></span> OFFLINE';
-                loginPill.innerText = '🟡 ফায়ারবেস কানেক্ট হচ্ছে...';
-                loginPill.style.background = '#fef3c7';
-                loginPill.style.color = '#92400e';
+                pill.innerText = '🟡 ফায়ারবেস কানেক্ট হচ্ছে...';
+                pill.style.background = '#fef3c7';
+                pill.style.color = '#92400e';
             }
         });
 
         // ============================================================
-        // App State
+        // 2. IMGBB UPLOAD ENGINE (With Auto Resize/Compression)
+        // ============================================================
+        function compressToBase64Raw(file, maxWidth = 1000, quality = 0.82) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let w = img.width, h = img.height;
+                        if (w > maxWidth) { h = Math.round((h * maxWidth) / w); w = maxWidth; }
+                        canvas.width = w; canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', quality).split(',')[1]);
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function uploadToImgBB(file, maxWidth = 1000) {
+            const base64 = await compressToBase64Raw(file, maxWidth, 0.82);
+            const form = new FormData();
+            form.append('image', base64);
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                method: 'POST',
+                body: form
+            });
+            const json = await res.json();
+            if (!json.success) throw new Error(json.error?.message || 'ImgBB Upload Error');
+            return json.data.display_url || json.data.url;
+        }
+
+        // ============================================================
+        // 3. APP STATE & 85+ CATEGORY ICONS
         // ============================================================
         let settingsData = {};
         let categoriesData = {};
@@ -1048,16 +1089,39 @@
         let activeChatMobile = null;
         let activeChatRef = null;
         let activeChatHandler = null;
+        let modalProductImages = []; // Up to 5 ImgBB image URLs
 
-        const presetIcons = [
-            'fa-microchip', 'fa-shirt', 'fa-basket-shopping', 'fa-headphones',
-            'fa-mobile-screen', 'fa-shoe-prints', 'fa-clock', 'fa-gem',
-            'fa-couch', 'fa-spray-can-sparkles', 'fa-kitchen-set', 'fa-gift',
-            'fa-book', 'fa-gamepad', 'fa-dumbbell', 'fa-tag'
+        const categoryIconsList = [
+            // Electronics & Gadgets
+            'fa-microchip', 'fa-mobile-screen', 'fa-laptop', 'fa-desktop', 'fa-tablet-screen-button',
+            'fa-headphones', 'fa-headset', 'fa-camera', 'fa-video', 'fa-tv',
+            'fa-plug', 'fa-battery-full', 'fa-charging-station', 'fa-keyboard', 'fa-computer-mouse',
+            'fa-print', 'fa-wifi', 'fa-bluetooth-b', 'fa-gamepad', 'fa-microscope',
+            // Fashion & Accessories
+            'fa-shirt', 'fa-vest', 'fa-socks', 'fa-hat-cowboy', 'fa-glasses',
+            'fa-shoe-prints', 'fa-bag-shopping', 'fa-briefcase', 'fa-suitcase', 'fa-wallet',
+            'fa-clock', 'fa-gem', 'fa-ring', 'fa-crown', 'fa-ribbon',
+            'fa-person-dress', 'fa-user-tie', 'fa-mitten', 'fa-umbrella', 'fa-scissors',
+            // Beauty & Health
+            'fa-spray-can-sparkles', 'fa-wand-magic-sparkles', 'fa-pump-soap', 'fa-spa', 'fa-heart-pulse',
+            'fa-pills', 'fa-kit-medical', 'fa-tooth', 'fa-eye', 'fa-bottle-droplet',
+            // Grocery & Food
+            'fa-basket-shopping', 'fa-cart-shopping', 'fa-apple-whole', 'fa-carrot', 'fa-pepper-hot',
+            'fa-bread-slice', 'fa-cheese', 'fa-egg', 'fa-fish', 'fa-drumstick-bite',
+            'fa-mug-hot', 'fa-bottle-water', 'fa-ice-cream', 'fa-cake-candles', 'fa-cookie-bite',
+            // Home, Kitchen & Furniture
+            'fa-couch', 'fa-bed', 'fa-chair', 'fa-kitchen-set', 'fa-utensils',
+            'fa-blender', 'fa-fire-burner', 'fa-lightbulb', 'fa-fan', 'fa-bath',
+            'fa-broom', 'fa-house', 'fa-screwdriver-wrench', 'fa-hammer', 'fa-paint-roller',
+            // Kids, Sports, Books, Vehicles & Gifts
+            'fa-baby', 'fa-baby-carriage', 'fa-puzzle-piece', 'fa-robot', 'fa-futbol',
+            'fa-basketball', 'fa-dumbbell', 'fa-bicycle', 'fa-motorcycle', 'fa-car',
+            'fa-book', 'fa-pen-nib', 'fa-graduation-cap', 'fa-guitar', 'fa-gift',
+            'fa-paw', 'fa-seedling', 'fa-campground', 'fa-fire', 'fa-star', 'fa-tag'
         ];
 
         // ============================================================
-        // Utilities
+        // 4. UTILITIES
         // ============================================================
         function escapeHtml(str) {
             return String(str || '')
@@ -1099,49 +1163,41 @@
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         document.querySelectorAll('.modal-overlay').forEach(ov => {
-            ov.addEventListener('click', (e) => {
-                if (e.target === ov) ov.style.display = 'none';
-            });
+            ov.addEventListener('click', (e) => { if (e.target === ov) ov.style.display = 'none'; });
         });
 
-        function compressImageToBase64(file, maxWidth = 720, quality = 0.76) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let w = img.width, h = img.height;
-                        if (w > maxWidth) { h = Math.round((h * maxWidth) / w); w = maxWidth; }
-                        canvas.width = w; canvas.height = h;
-                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/jpeg', quality));
-                    };
-                    img.onerror = reject;
-                    img.src = e.target.result;
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
+        function getProductImages(p) {
+            if (!p) return [];
+            if (Array.isArray(p.images) && p.images.length) return p.images.filter(Boolean);
+            if (p.images && typeof p.images === 'object') return Object.values(p.images).filter(Boolean);
+            return p.image ? [p.image] : [];
+        }
+
+        function getProductCode(id, p) {
+            if (p && p.code) return p.code;
+            return 'BUB-' + String(id).replace(/[^a-zA-Z0-9]/g, '').slice(-4).toUpperCase();
+        }
+
+        function generateUniqueProductCode() {
+            const existingCodes = new Set(Object.entries(productsData).map(([id, p]) => getProductCode(id, p).toUpperCase()));
+            for (let i = 0; i < 50; i++) {
+                const candidate = 'BUB-' + Math.floor(1000 + Math.random() * 9000);
+                if (!existingCodes.has(candidate)) return candidate;
+            }
+            return 'BUB-' + Date.now().toString().slice(-4);
         }
 
         // ============================================================
-        // Admin Login (Firebase RTDB backed + Timeout Protection)
+        // 5. ADMIN LOGIN
         // ============================================================
         async function getStoredAdminPassword() {
             try {
-                const timeout = new Promise((_, reject) =>
-                    setTimeout(() => reject(new Error('timeout')), 4500)
-                );
-                const snap = await Promise.race([
-                    fbDb.ref('adminConfig/password').once('value'),
-                    timeout
-                ]);
+                const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 4500));
+                const snap = await Promise.race([fbDb.ref('adminConfig/password').once('value'), timeout]);
                 if (snap.exists() && snap.val()) return String(snap.val()).trim();
                 await fbDb.ref('adminConfig/password').set('admin123');
                 return 'admin123';
             } catch (e) {
-                console.warn("Firebase password check fallback:", e.message);
                 showToast("ফায়ারবেস রেসপন্স ধীর — databaseURL ও Rules চেক করুন", "error");
                 return 'admin123';
             }
@@ -1155,9 +1211,7 @@
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> যাচাই হচ্ছে...';
-
             const realPass = await getStoredAdminPassword();
-
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-right-to-bracket"></i> প্রবেশ করুন';
 
@@ -1191,12 +1245,12 @@
                 document.getElementById('newAdminPassInput').value = '';
                 showToast("অ্যাডমিন পাসওয়ার্ড আপডেট হয়েছে!", "success");
             } catch (e) {
-                showToast("পাসওয়ার্ড পরিবর্তন করা যায়নি! Rules চেক করুন।", "error");
+                showToast("পাসওয়ার্ড পরিবর্তন করা যায়নি!", "error");
             }
         }
 
         // ============================================================
-        // Navigation Tabs
+        // 6. TABS & REAL-TIME LISTENERS
         // ============================================================
         function switchTab(tabName) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabName));
@@ -1204,9 +1258,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ============================================================
-        // Real-Time Firebase Listeners
-        // ============================================================
         function startAdminListeners() {
             renderIconPicker();
 
@@ -1214,44 +1265,37 @@
                 settingsData = snap.val() || {};
                 populateSettingsForm();
             });
-
             fbDb.ref('categories').on('value', (snap) => {
                 categoriesData = snap.val() || {};
                 renderAdminCategories();
                 populateProductCategoryDropdown();
                 renderAdminProducts();
             });
-
             fbDb.ref('products').on('value', (snap) => {
                 productsData = snap.val() || {};
                 renderAdminProducts();
                 renderAllReviews();
                 updateDashboardStats();
             });
-
             fbDb.ref('orders').on('value', (snap) => {
                 ordersData = snap.val() || {};
                 renderOrders();
                 updateDashboardStats();
             });
-
             fbDb.ref('users').on('value', (snap) => {
                 usersData = snap.val() || {};
                 renderCustomers();
                 updateDashboardStats();
             });
-
             fbDb.ref('reviews').on('value', (snap) => {
                 reviewsData = snap.val() || {};
                 renderAllReviews();
             });
-
             fbDb.ref('chats').on('value', (snap) => {
                 chatsData = snap.val() || {};
                 renderChatUsersList();
                 updateDashboardStats();
             });
-
             fbDb.ref('notifications/global').on('value', (snap) => {
                 globalNotifsData = snap.val() || {};
                 renderGlobalNotifHistory();
@@ -1259,14 +1303,12 @@
         }
 
         // ============================================================
-        // 1. Dashboard Overview
+        // 7. DASHBOARD & QUICK CODE LOOKUP
         // ============================================================
         function updateDashboardStats() {
             const ordersArr = Object.values(ordersData);
             const pendingCount = ordersArr.filter(o => (o.status || 'Pending') === 'Pending').length;
-            const deliveredRev = ordersArr
-                .filter(o => o.status === 'Delivered')
-                .reduce((sum, o) => sum + Number(o.total || 0), 0);
+            const deliveredRev = ordersArr.filter(o => o.status === 'Delivered').reduce((sum, o) => sum + Number(o.total || 0), 0);
 
             document.getElementById('statPendingOrders').innerText = pendingCount;
             document.getElementById('statTotalRevenue').innerText = `৳${deliveredRev}`;
@@ -1303,14 +1345,48 @@
             `).join('');
         }
 
+        function lookupProductByCodeInput() {
+            const code = document.getElementById('quickCodeLookup').value.trim().toUpperCase();
+            if (!code) return showToast("পণ্যের কোড লিখুন (যেমন: BUB-1001)", "error");
+            showProductByCode(code);
+        }
+
+        function showProductByCode(codeQuery) {
+            const q = codeQuery.trim().toUpperCase();
+            const found = Object.entries(productsData).find(([id, p]) => getProductCode(id, p).toUpperCase() === q);
+            if (!found) {
+                return showToast(`কোড "${q}" দিয়ে কোনো পণ্য পাওয়া যায়নি!`, "error");
+            }
+            const [id, p] = found;
+            const imgs = getProductImages(p);
+            document.getElementById('quickProdBody').innerHTML = `
+                <div style="text-align:center;">
+                    <img src="${escapeHtml(imgs[0] || '')}" style="width:100%; height:190px; object-fit:cover; border-radius:12px; margin-bottom:10px;" onerror="this.src='https://via.placeholder.com/300'">
+                    <div class="code-pill" style="font-size:13px; margin-bottom:6px;">${escapeHtml(getProductCode(id, p))}</div>
+                    <h3 style="margin-bottom:4px;">${escapeHtml(p.name)}</h3>
+                    <div style="font-size:20px; font-weight:800; color:var(--primary); margin-bottom:6px;">
+                        ৳${p.price} ${p.oldPrice ? `<s style="font-size:13px; color:#94a3b8;">৳${p.oldPrice}</s>` : ''}
+                    </div>
+                    <div style="font-size:13px; color:var(--muted); margin-bottom:12px;">
+                        ক্যাটাগরি: ${escapeHtml(getCatName(p.category))} • স্টক: <strong>${p.stock ?? 0}</strong> • ছবি: ${imgs.length}টি
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn btn-primary" style="flex:1;" onclick="closeModal('quickProdModal'); openProductModal('${id}');">
+                            <i class="fas fa-pen"></i> এডিট করুন
+                        </button>
+                        <button class="btn btn-outline" style="flex:1;" onclick="closeModal('quickProdModal')">বন্ধ করুন</button>
+                    </div>
+                </div>
+            `;
+            openModal('quickProdModal');
+        }
+
         // ============================================================
-        // 2. Orders Management + Auto Real-Time Customer Notification
+        // 8. ORDERS MANAGEMENT
         // ============================================================
         function setOrderFilter(status) {
             currentOrderFilter = status;
-            document.querySelectorAll('#orderFilterPills .fpill').forEach(p => {
-                p.classList.toggle('active', p.dataset.status === status);
-            });
+            document.querySelectorAll('#orderFilterPills .fpill').forEach(p => p.classList.toggle('active', p.dataset.status === status));
             renderOrders();
         }
 
@@ -1323,11 +1399,13 @@
                 .filter(o => {
                     const st = o.status || 'Pending';
                     const matchStatus = currentOrderFilter === 'all' || st === currentOrderFilter;
+                    const itemsCodes = (o.items || []).map(i => (i.code || '') + ' ' + (i.name || '')).join(' ').toLowerCase();
                     const matchQ = !q ||
                         (o.orderId || o.key).toLowerCase().includes(q) ||
                         (o.customerName || '').toLowerCase().includes(q) ||
                         (o.userMobile || '').includes(q) ||
-                        (o.contactMobile || '').includes(q);
+                        (o.contactMobile || '').includes(q) ||
+                        itemsCodes.includes(q);
                     return matchStatus && matchQ;
                 })
                 .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
@@ -1338,7 +1416,9 @@
             }
 
             container.innerHTML = list.map(o => {
-                const itemsHtml = (o.items || []).map(i => `<div>• ${escapeHtml(i.name)} × ${i.qty} = ৳${i.price * i.qty}</div>`).join('');
+                const itemsHtml = (o.items || []).map(i => `
+                    <div>• <strong>${escapeHtml(i.name)}</strong> ${i.code ? `<span class="code-pill" style="cursor:pointer;" onclick="showProductByCode('${escapeHtml(i.code)}')">${escapeHtml(i.code)}</span>` : ''} × ${i.qty} = ৳${i.price * i.qty}</div>
+                `).join('');
                 const st = o.status || 'Pending';
                 return `
                     <div class="order-card">
@@ -1413,13 +1493,16 @@
         }
 
         async function adminDownloadReceipt(orderKey) {
-            if (typeof html2canvas === 'undefined') {
-                return showToast("রিসিট তৈরি করতে ইন্টারনেট সংযোগ চালু রাখুন", "error");
-            }
             const order = ordersData[orderKey];
             if (!order) return;
             const area = document.getElementById('receiptRenderArea');
-            const rows = (order.items || []).map(i => `<tr><td>${escapeHtml(i.name)}</td><td>${i.qty}</td><td>৳${i.price * i.qty}</td></tr>`).join('');
+            const rows = (order.items || []).map(i => `
+                <tr>
+                    <td>${escapeHtml(i.name)}<br><small style="color:#64748b;">কোড: ${escapeHtml(i.code || '-')}</small></td>
+                    <td>${i.qty}</td>
+                    <td>৳${i.price * i.qty}</td>
+                </tr>
+            `).join('');
             area.innerHTML = `
                 <div class="receipt-box">
                     <div class="receipt-head">
@@ -1464,7 +1547,7 @@
         }
 
         // ============================================================
-        // 3. Products Management
+        // 9. PRODUCTS MANAGEMENT (5 IMGBB PHOTOS + VIDEO + AUTO CODE)
         // ============================================================
         function getCatName(catId) {
             const c = categoriesData[catId];
@@ -1494,7 +1577,10 @@
             const listEl = document.getElementById('adminProductsList');
             const q = document.getElementById('prodSearchInput').value.trim().toLowerCase();
             const entries = Object.entries(productsData)
-                .filter(([id, p]) => !q || (p.name || '').toLowerCase().includes(q) || getCatName(p.category).toLowerCase().includes(q))
+                .filter(([id, p]) => {
+                    const code = getProductCode(id, p).toLowerCase();
+                    return !q || (p.name || '').toLowerCase().includes(q) || code.includes(q) || getCatName(p.category).toLowerCase().includes(q);
+                })
                 .sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0));
 
             if (entries.length === 0) {
@@ -1502,115 +1588,187 @@
                 return;
             }
 
-            listEl.innerHTML = entries.map(([id, p], idx) => `
-                <div class="prod-row">
-                    <img src="${escapeHtml(p.image)}" alt="" onerror="this.src='https://via.placeholder.com/80'">
-                    <div class="prod-meta">
-                        <div class="prod-name">
-                            ${idx < 5 && !q ? '<span style="background:#dbeafe; color:#1d4ed8; font-size:10px; padding:1px 6px; border-radius:6px; margin-right:5px;">স্লাইডার</span>' : ''}
-                            ${escapeHtml(p.name)}
+            listEl.innerHTML = entries.map(([id, p], idx) => {
+                const imgs = getProductImages(p);
+                const code = getProductCode(id, p);
+                return `
+                    <div class="prod-row">
+                        <img src="${escapeHtml(imgs[0] || '')}" alt="" onerror="this.src='https://via.placeholder.com/80'">
+                        <div class="prod-meta">
+                            <div class="prod-name">
+                                ${idx < 5 && !q ? '<span class="slider-pill">স্লাইডার</span>' : ''}
+                                <span class="code-pill">${escapeHtml(code)}</span>
+                                ${escapeHtml(p.name)}
+                            </div>
+                            <div class="prod-sub">
+                                <strong style="color:var(--primary);">৳${p.price}</strong>
+                                ${p.oldPrice ? `<s style="margin-left:4px;">৳${p.oldPrice}</s>` : ''}
+                                • ${escapeHtml(getCatName(p.category))} • স্টক: <strong>${p.stock ?? 0}</strong>
+                                • ছবি: ${imgs.length}টি ${p.videoUrl ? '• 🎬 ভিডিও' : ''}
+                            </div>
                         </div>
-                        <div class="prod-sub">
-                            <strong style="color:var(--primary);">৳${p.price}</strong>
-                            ${p.oldPrice ? `<s style="margin-left:4px;">৳${p.oldPrice}</s>` : ''}
-                            • ${escapeHtml(getCatName(p.category))} • স্টক: <strong>${p.stock ?? 0}</strong>
+                        <div class="prod-actions">
+                            <button class="btn btn-outline btn-sm" onclick="openProductModal('${id}')"><i class="fas fa-pen"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteProduct('${id}')"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
-                    <div class="prod-actions">
-                        <button class="btn btn-outline btn-sm" onclick="openProductModal('${id}')"><i class="fas fa-pen"></i></button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteProduct('${id}')"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        function updateProdPreview(src) {
-            const box = document.getElementById('prodImgPreviewBox');
-            if (src && src.trim()) {
-                box.innerHTML = `<img src="${escapeHtml(src.trim())}" alt="Preview">`;
-            } else {
-                box.innerHTML = `<span style="font-size:13px; color:var(--muted);">ছবির প্রিভিউ এখানে দেখাবে</span>`;
+        function renderMultiImageGrid() {
+            const grid = document.getElementById('multiImgGrid');
+            let html = '';
+            for (let i = 0; i < 5; i++) {
+                const url = modalProductImages[i];
+                if (url) {
+                    html += `
+                        <div class="img-slot">
+                            <img src="${escapeHtml(url)}" alt="">
+                            ${i === 0 ? '<span class="img-slot-main">মেইন</span>' : ''}
+                            <button type="button" class="img-slot-remove" onclick="removeModalImage(${i})">&times;</button>
+                        </div>
+                    `;
+                } else {
+                    html += `<div class="img-slot"><span style="font-size:11px; color:#94a3b8;">ছবি ${i + 1}</span></div>`;
+                }
             }
+            grid.innerHTML = html;
         }
 
-        async function handleProdImageFile(input) {
-            const file = input.files[0];
-            if (!file) return;
-            try {
-                showToast("ছবি প্রসেস হচ্ছে...", "info");
-                const b64 = await compressImageToBase64(file, 720, 0.76);
-                document.getElementById('prodImageUrl').value = b64;
-                updateProdPreview(b64);
-                showToast("ছবি রেডি হয়েছে!", "success");
-            } catch (e) {
-                showToast("ছবি লোড করতে সমস্যা হয়েছে", "error");
+        function removeModalImage(idx) {
+            modalProductImages.splice(idx, 1);
+            renderMultiImageGrid();
+        }
+
+        function addManualImageUrl() {
+            const input = document.getElementById('manualImgUrlInput');
+            const url = input.value.trim();
+            if (!url) return showToast("ছবির URL লিখুন", "error");
+            if (modalProductImages.length >= 5) return showToast("সর্বোচ্চ ৫টি ছবি যুক্ত করা যাবে", "error");
+            modalProductImages.push(url);
+            input.value = '';
+            renderMultiImageGrid();
+        }
+
+        async function handleMultiImageUpload(input) {
+            const files = Array.from(input.files || []);
+            if (files.length === 0) return;
+
+            const remaining = 5 - modalProductImages.length;
+            if (remaining <= 0) {
+                input.value = '';
+                return showToast("ইতিমধ্যে ৫টি ছবি যুক্ত করা হয়েছে!", "error");
             }
+
+            const toUpload = files.slice(0, remaining);
+            const label = document.getElementById('multiUploadLabel');
+            const origText = label.querySelector('span').innerText;
+            label.style.pointerEvents = 'none';
+
+            let uploadedCount = 0;
+            for (let i = 0; i < toUpload.length; i++) {
+                label.querySelector('span').innerText = `ImgBB-তে আপলোড হচ্ছে (${i + 1}/${toUpload.length})...`;
+                try {
+                    const url = await uploadToImgBB(toUpload[i], 1000);
+                    modalProductImages.push(url);
+                    uploadedCount++;
+                    renderMultiImageGrid();
+                } catch (err) {
+                    showToast(`ছবি ${i + 1} আপলোড ব্যর্থ হয়েছে!`, "error");
+                }
+            }
+
+            label.querySelector('span').innerText = origText;
+            label.style.pointerEvents = 'auto';
+            input.value = '';
+            if (uploadedCount > 0) showToast(`${uploadedCount}টি ছবি সফলভাবে ImgBB-তে আপলোড হয়েছে!`, "success");
+        }
+
+        function regenerateProductCode() {
+            document.getElementById('prodCode').value = generateUniqueProductCode();
         }
 
         function openProductModal(prodId = null) {
             populateProductCategoryDropdown();
-            document.getElementById('prodImageFile').value = '';
+            document.getElementById('prodMultiFileInput').value = '';
+            document.getElementById('manualImgUrlInput').value = '';
             document.getElementById('bumpToSliderCheck').checked = false;
 
             if (prodId && productsData[prodId]) {
                 const p = productsData[prodId];
                 document.getElementById('editProdId').value = prodId;
                 document.getElementById('prodModalTitle').innerHTML = '<i class="fas fa-pen-to-square"></i> পণ্য এডিট করুন';
+                document.getElementById('prodCode').value = getProductCode(prodId, p);
                 document.getElementById('prodName').value = p.name || '';
                 document.getElementById('prodPrice').value = p.price || '';
                 document.getElementById('prodOldPrice').value = p.oldPrice || '';
                 document.getElementById('prodStock').value = p.stock ?? 0;
                 document.getElementById('prodCategory').value = p.category || '';
-                document.getElementById('prodImageUrl').value = p.image || '';
+                document.getElementById('prodVideoUrl').value = p.videoUrl || '';
                 document.getElementById('prodDesc').value = p.description || '';
                 document.getElementById('bumpSliderWrap').style.display = 'block';
-                updateProdPreview(p.image || '');
+                modalProductImages = [...getProductImages(p)].slice(0, 5);
             } else {
                 document.getElementById('editProdId').value = '';
                 document.getElementById('prodModalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> নতুন পণ্য যোগ করুন';
+                document.getElementById('prodCode').value = generateUniqueProductCode();
                 document.getElementById('prodName').value = '';
                 document.getElementById('prodPrice').value = '';
                 document.getElementById('prodOldPrice').value = '';
                 document.getElementById('prodStock').value = '10';
-                document.getElementById('prodImageUrl').value = '';
+                document.getElementById('prodVideoUrl').value = '';
                 document.getElementById('prodDesc').value = '';
                 document.getElementById('bumpSliderWrap').style.display = 'none';
-                updateProdPreview('');
+                modalProductImages = [];
             }
+            renderMultiImageGrid();
             openModal('productModal');
         }
 
         async function saveProduct() {
             const editId = document.getElementById('editProdId').value;
+            const code = (document.getElementById('prodCode').value.trim() || generateUniqueProductCode()).toUpperCase();
             const name = document.getElementById('prodName').value.trim();
             const price = Number(document.getElementById('prodPrice').value);
             const oldPriceVal = document.getElementById('prodOldPrice').value.trim();
             const oldPrice = oldPriceVal ? Number(oldPriceVal) : null;
             const stock = Number(document.getElementById('prodStock').value);
             const category = document.getElementById('prodCategory').value;
-            const image = document.getElementById('prodImageUrl').value.trim();
+            const videoUrl = document.getElementById('prodVideoUrl').value.trim();
             const description = document.getElementById('prodDesc').value.trim();
             const bumpSlider = document.getElementById('bumpToSliderCheck').checked;
 
-            if (!name || !price || !image || !category) {
-                return showToast("নাম, বিক্রয় মূল্য, ক্যাটাগরি এবং ছবি অবশ্যই দিন", "error");
-            }
+            if (modalProductImages.length === 0) return showToast("কমপক্ষে ১টি পণ্যের ছবি আপলোড করুন", "error");
+            if (!name || !price || !category) return showToast("পণ্যের নাম, বিক্রয় মূল্য ও ক্যাটাগরি দিন", "error");
+
+            const btn = document.getElementById('saveProdBtn');
+            btn.disabled = true;
 
             const existingCreated = editId && productsData[editId] ? (productsData[editId].createdAt || Date.now()) : Date.now();
             const payload = {
-                name, price, oldPrice,
+                code,
+                name,
+                price,
+                oldPrice,
                 stock: isNaN(stock) ? 0 : stock,
-                category, image, description,
+                category,
+                image: modalProductImages[0],
+                images: modalProductImages,
+                videoUrl,
+                description,
                 createdAt: (editId && !bumpSlider) ? existingCreated : Date.now()
             };
 
             const id = editId || ('prod_' + Date.now());
             try {
                 await fbDb.ref(`products/${id}`).set(payload);
-                showToast(editId ? "পণ্য আপডেট হয়েছে!" : "নতুন পণ্য লাইভ হয়েছে!", "success");
+                showToast(editId ? `পণ্য (${code}) আপডেট হয়েছে!` : `নতুন পণ্য (${code}) লাইভ হয়েছে!`, "success");
                 closeModal('productModal');
             } catch (e) {
                 showToast("পণ্য সেভ করা যায়নি! Firebase Rules চেক করুন।", "error");
+            } finally {
+                btn.disabled = false;
             }
         }
 
@@ -1623,13 +1781,19 @@
         }
 
         // ============================================================
-        // 4. Dynamic Categories
+        // 10. DYNAMIC CATEGORIES (85+ SEARCHABLE ICONS)
         // ============================================================
         function renderIconPicker() {
             const box = document.getElementById('iconPicker');
             const current = document.getElementById('catIconInput').value;
-            box.innerHTML = presetIcons.map(ic => `
-                <div class="icon-choice ${current === ic ? 'active' : ''}" onclick="pickCategoryIcon('${ic}')">
+            const q = (document.getElementById('catIconSearch')?.value || '').trim().toLowerCase();
+            const filtered = categoryIconsList.filter(ic => !q || ic.toLowerCase().includes(q));
+
+            document.getElementById('iconCountLabel').innerText = filtered.length;
+            document.getElementById('selectedIconPreview').innerHTML = `<i class="fas ${escapeHtml(current)}"></i>`;
+
+            box.innerHTML = filtered.map(ic => `
+                <div class="icon-choice ${current === ic ? 'active' : ''}" onclick="pickCategoryIcon('${ic}')" title="${ic}">
                     <i class="fas ${ic}"></i>
                 </div>
             `).join('');
@@ -1657,7 +1821,7 @@
                         </div>
                         <div class="prod-meta">
                             <div class="prod-name">${escapeHtml(name)}</div>
-                            <div class="prod-sub">ID: ${escapeHtml(id)}</div>
+                            <div class="prod-sub">ID: ${escapeHtml(id)} • Icon: ${escapeHtml(icon)}</div>
                         </div>
                         <div class="prod-actions">
                             <button class="btn btn-outline btn-sm" onclick="editCategory('${id}')"><i class="fas fa-pen"></i></button>
@@ -1683,6 +1847,7 @@
             document.getElementById('editCatId').value = '';
             document.getElementById('catNameInput').value = '';
             document.getElementById('catIconInput').value = 'fa-tag';
+            document.getElementById('catIconSearch').value = '';
             document.getElementById('catFormHeading').innerHTML = '<i class="fas fa-folder-plus" style="color:var(--primary);"></i> নতুন ক্যাটাগরি যোগ করুন';
             document.getElementById('cancelCatEditBtn').style.display = 'none';
             renderIconPicker();
@@ -1712,8 +1877,16 @@
         }
 
         // ============================================================
-        // 5. Live Chat Reply
+        // 11. LIVE CHAT REPLY (IMGBB IMAGES + CLICKABLE PRODUCT CODES)
         // ============================================================
+        function highlightProductCodesInMessage(rawText) {
+            const safe = escapeHtml(rawText);
+            return safe.replace(/\b(BUB-[A-Z0-9]{3,8})\b/gi, (match) => {
+                const up = match.toUpperCase();
+                return `<span class="msg-code-link" onclick="showProductByCode('${up}')" title="পণ্য দেখতে ক্লিক করুন">🔍 ${up}</span>`;
+            });
+        }
+
         function renderChatUsersList() {
             const box = document.getElementById('chatUsersList');
             const list = Object.entries(chatsData)
@@ -1755,13 +1928,14 @@
 
             document.getElementById('adminChatInput').disabled = false;
             document.getElementById('adminChatSendBtn').disabled = false;
+            const imgLbl = document.getElementById('adminChatImgLabel');
+            imgLbl.style.opacity = '1';
+            imgLbl.style.pointerEvents = 'auto';
 
             fbDb.ref(`chats/${mobile}/meta`).update({ unreadAdmin: false });
             renderChatUsersList();
 
-            if (activeChatRef && activeChatHandler) {
-                activeChatRef.off('value', activeChatHandler);
-            }
+            if (activeChatRef && activeChatHandler) activeChatRef.off('value', activeChatHandler);
             activeChatRef = fbDb.ref(`chats/${mobile}/messages`);
             activeChatHandler = (snap) => {
                 const msgBox = document.getElementById('adminChatMessages');
@@ -1774,7 +1948,11 @@
                 arr.forEach(m => {
                     const div = document.createElement('div');
                     div.className = `msg-bubble ${m.sender === 'admin' ? 'msg-admin' : 'msg-customer'}`;
-                    div.innerHTML = `${escapeHtml(m.text)}<span class="msg-time">${formatDate(m.timestamp)}</span>`;
+                    div.innerHTML = `
+                        ${m.imageUrl ? `<img src="${escapeHtml(m.imageUrl)}" class="msg-img" onclick="window.open('${escapeHtml(m.imageUrl)}','_blank')">` : ''}
+                        ${m.text ? `<div>${highlightProductCodesInMessage(m.text)}</div>` : ''}
+                        <span class="msg-time">${formatDate(m.timestamp)}</span>
+                    `;
                     msgBox.appendChild(div);
                 });
                 msgBox.scrollTop = msgBox.scrollHeight;
@@ -1799,16 +1977,34 @@
             }
         }
 
+        async function sendAdminChatImage(input) {
+            const file = input.files[0];
+            if (!file || !activeChatMobile) return;
+            input.value = '';
+            try {
+                showToast("ছবি ImgBB-তে আপলোড হচ্ছে...", "info");
+                const imageUrl = await uploadToImgBB(file, 900);
+                const now = Date.now();
+                await fbDb.ref(`chats/${activeChatMobile}/messages`).push({ sender: 'admin', imageUrl, text: '', timestamp: now });
+                await fbDb.ref(`chats/${activeChatMobile}/meta`).update({
+                    lastMessage: "অ্যাডমিন: 📷 ছবি পাঠিয়েছেন", lastTime: now, unreadAdmin: false
+                });
+                showToast("ছবি পাঠানো হয়েছে!", "success");
+            } catch (e) {
+                showToast("ছবি পাঠানো যায়নি!", "error");
+            }
+        }
+
         document.getElementById('adminChatInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendAdminReply();
         });
 
         // ============================================================
-        // 6. Notifications
+        // 12. NOTIFICATIONS
         // ============================================================
         function toggleNotifTargetMobile() {
-            const type = document.getElementById('notifTargetType').value;
-            document.getElementById('notifMobileWrap').style.display = type === 'user' ? 'block' : 'none';
+            document.getElementById('notifMobileWrap').style.display =
+                document.getElementById('notifTargetType').value === 'user' ? 'block' : 'none';
         }
 
         async function sendNotification() {
@@ -1818,9 +2014,7 @@
             const message = document.getElementById('notifMsgInput').value.trim();
 
             if (!title || !message) return showToast("শিরোনাম ও বার্তা লিখুন", "error");
-            if (target === 'user' && !/^01[3-9]\d{8}$/.test(mobile)) {
-                return showToast("সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন", "error");
-            }
+            if (target === 'user' && !/^01[3-9]\d{8}$/.test(mobile)) return showToast("সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন", "error");
 
             try {
                 if (target === 'global') {
@@ -1866,7 +2060,7 @@
         }
 
         // ============================================================
-        // 7. Customers & Reviews
+        // 13. CUSTOMERS & REVIEWS
         // ============================================================
         function renderCustomers() {
             const box = document.getElementById('customersList');
@@ -1917,6 +2111,7 @@
             }
             box.innerHTML = all.map(r => `
                 <div class="prod-row">
+                    ${r.imageUrl ? `<img src="${escapeHtml(r.imageUrl)}" style="cursor:pointer;" onclick="window.open('${escapeHtml(r.imageUrl)}','_blank')">` : ''}
                     <div class="prod-meta">
                         <div class="prod-name">${escapeHtml(r.prodName)} <span style="color:var(--warning); font-size:12px;">${'★'.repeat(r.rating || 5)}</span></div>
                         <div class="prod-sub"><strong>${escapeHtml(r.userName || r.userMobile)}:</strong> ${escapeHtml(r.comment)}</div>
@@ -1934,7 +2129,7 @@
         }
 
         // ============================================================
-        // 8. Settings & JSON Backup
+        // 14. SETTINGS, VERSIONING & JSON BACKUP
         // ============================================================
         function populateSettingsForm() {
             document.getElementById('setLogoUrl').value = settingsData.logoUrl || '';
@@ -1942,16 +2137,31 @@
             document.getElementById('setDeliveryCharge').value = settingsData.deliveryCharge ?? 60;
             document.getElementById('setBkash').value = settingsData.bkashNumber || '';
             document.getElementById('setNagad').value = settingsData.nagadNumber || '';
+            document.getElementById('setAppVersion').value = settingsData.appVersion || '2.0.0';
             if (settingsData.logoUrl) document.getElementById('adminHeaderLogo').src = settingsData.logoUrl;
+        }
+
+        function bumpAppVersion() {
+            const input = document.getElementById('setAppVersion');
+            const parts = (input.value.trim() || '2.0.0').split('.').map(n => parseInt(n, 10) || 0);
+            while (parts.length < 3) parts.push(0);
+            parts[2] += 1;
+            input.value = parts.join('.');
+            showToast(`নতুন ভার্সন ${input.value} সেট করা হয়েছে—এখন সেভ বাটনে ক্লিক করুন`, "info");
         }
 
         async function handleLogoFileUpload(input) {
             const file = input.files[0];
             if (!file) return;
-            const b64 = await compressImageToBase64(file, 260, 0.85);
-            document.getElementById('setLogoUrl').value = b64;
-            document.getElementById('adminHeaderLogo').src = b64;
-            showToast("লোগো প্রসেস হয়েছে! এখন সেভ বাটনে ক্লিক করুন।", "success");
+            try {
+                showToast("লোগো ImgBB-তে আপলোড হচ্ছে...", "info");
+                const url = await uploadToImgBB(file, 360);
+                document.getElementById('setLogoUrl').value = url;
+                document.getElementById('adminHeaderLogo').src = url;
+                showToast("লোগো আপলোড সফল! এখন সেভ বাটনে ক্লিক করুন।", "success");
+            } catch (e) {
+                showToast("লোগো আপলোড করা যায়নি!", "error");
+            }
         }
 
         async function saveShopSettings() {
@@ -1961,11 +2171,12 @@
                 noticeText: document.getElementById('setNoticeText').value.trim(),
                 deliveryCharge: Number(document.getElementById('setDeliveryCharge').value || 0),
                 bkashNumber: document.getElementById('setBkash').value.trim(),
-                nagadNumber: document.getElementById('setNagad').value.trim()
+                nagadNumber: document.getElementById('setNagad').value.trim(),
+                appVersion: document.getElementById('setAppVersion').value.trim() || '2.0.0'
             };
             try {
                 await fbDb.ref('settings').update(payload);
-                showToast("শপ সেটিংস রিয়েল-টাইম আপডেট হয়েছে!", "success");
+                showToast("শপ সেটিংস ও ভার্সন আপডেট হয়েছে!", "success");
             } catch (e) {
                 showToast("সেটিংস সেভ করা যায়নি!", "error");
             }
