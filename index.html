@@ -37,7 +37,13 @@
             --shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Hind Siliguri', sans-serif; -webkit-tap-highlight-color: transparent; }
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
         html, body { max-width: 100%; overflow-x: hidden; background: var(--bg); color: var(--text); }
         body { padding-bottom: 34px; }
         button, input, select, textarea { font-family: inherit; }
@@ -290,7 +296,7 @@
         .prod-row img { width: 64px; height: 64px; border-radius: 10px; object-fit: cover; flex-shrink: 0; background: #e2e8f0; }
         .prod-meta { flex: 1; min-width: 0; }
         .prod-name { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .prod-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+        .prod-sub { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.45; }
         .prod-actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
         .code-pill {
             display: inline-block;
@@ -312,6 +318,22 @@
             border-radius: 6px;
             margin-right: 4px;
         }
+        .variant-pill {
+            display: inline-block;
+            background: #f3e8ff;
+            color: #6b21a8;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 6px;
+            margin: 2px 4px 0 0;
+        }
+        .preset-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+        .preset-chip {
+            background: #f1f5f9; border: 1px solid #cbd5e1; color: #334155;
+            padding: 3px 8px; border-radius: 7px; font-size: 11px; font-weight: 700; cursor: pointer;
+        }
+        .preset-chip:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
 
         /* Multi-Image Uploader Grid (Up to 5 Images) */
         .multi-img-grid {
@@ -377,7 +399,41 @@
             margin-bottom: 8px;
         }
 
-        /* Extensive Icon Picker (85+ Icons) */
+        /* Delivery Zones & Toggle Switch in Settings */
+        .toggle-card {
+            background: #fffbeb;
+            border: 1.5px solid #fcd34d;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        .switch-wrap { position: relative; display: inline-block; width: 48px; height: 26px; flex-shrink: 0; }
+        .switch-wrap input { opacity: 0; width: 0; height: 0; }
+        .switch-slider {
+            position: absolute; cursor: pointer; inset: 0; background: #cbd5e1;
+            transition: 0.25s; border-radius: 30px;
+        }
+        .switch-slider::before {
+            position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px;
+            background: #fff; transition: 0.25s; border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+        .switch-wrap input:checked + .switch-slider { background: var(--success); }
+        .switch-wrap input:checked + .switch-slider::before { transform: translateX(22px); }
+
+        .zone-editor-box {
+            background: #f8fafc; border: 1px solid var(--border);
+            border-radius: 12px; padding: 12px; margin-bottom: 14px;
+        }
+        .zone-edit-row {
+            display: grid; grid-template-columns: 1fr 105px auto; gap: 7px;
+            align-items: center; margin-bottom: 8px;
+        }
+
+        /* Extensive Icon Picker */
         .icon-picker-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(38px, 1fr));
@@ -433,17 +489,63 @@
         .order-items-box { background: #f8fafc; border-radius: 9px; padding: 8px 10px; font-size: 13px; margin: 8px 0; border: 1px solid #eef2f7; }
         .order-footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 8px; }
 
-        /* Live Chat Split Layout */
-        .chat-layout { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        @media (min-width: 768px) { .chat-layout { grid-template-columns: 310px 1fr; } }
-        .chat-list-box { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; max-height: 70vh; overflow-y: auto; }
-        .chat-user-row { padding: 12px 14px; border-bottom: 1px solid var(--border); cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-        .chat-user-row:hover { background: #f8fafc; }
-        .chat-user-row.active { background: var(--primary-soft); border-left: 4px solid var(--primary); }
-        .unread-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--danger); flex-shrink: 0; }
-        .chat-window { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); display: flex; flex-direction: column; height: 70vh; overflow: hidden; }
-        .chat-win-head { padding: 12px 15px; border-bottom: 1px solid var(--border); background: #f8fafc; display: flex; justify-content: space-between; align-items: center; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 14px; background: #f1f5f9; display: flex; flex-direction: column; gap: 8px; }
+        /* Serial SMS / Chat Inbox List + Full Detail Page Overlay */
+        .sms-serial-list { display: flex; flex-direction: column; gap: 8px; }
+        .sms-sender-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 14px; border: 1px solid var(--border);
+            border-radius: 12px; background: #fff; cursor: pointer; transition: 0.18s;
+        }
+        .sms-sender-row:hover { border-color: var(--primary); background: #f8fafc; }
+        .sms-sender-row.unread { background: #eff6ff; border-color: #93c5fd; }
+        .sms-serial-num {
+            width: 34px; height: 34px; border-radius: 10px;
+            background: #f1f5f9; color: #334155; font-weight: 800; font-size: 13px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .sms-sender-row.unread .sms-serial-num { background: var(--primary); color: #fff; }
+        .sms-sender-info { flex: 1; min-width: 0; }
+        .sms-sender-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+        .sms-sender-name { font-size: 15px; font-weight: 700; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sms-sender-time { font-size: 11px; color: var(--muted); white-space: nowrap; }
+        .sms-sender-sub { font-size: 12.5px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+        .sms-new-pill {
+            background: var(--danger); color: #fff; font-size: 10px; font-weight: 700;
+            padding: 2px 7px; border-radius: 99px; flex-shrink: 0;
+        }
+
+        /* Opened SMS Detail Page Overlay (With × Exit Button) */
+        .sms-page-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px); display: none; justify-content: center;
+            align-items: center; z-index: 1600; padding: 0;
+        }
+        @media (min-width: 700px) { .sms-page-overlay { padding: 20px; } }
+        .sms-page-sheet {
+            background: #fff; width: 100%; height: 100%;
+            max-width: 760px; display: flex; flex-direction: column; overflow: hidden;
+            animation: fadeIn 0.18s ease;
+        }
+        @media (min-width: 700px) {
+            .sms-page-sheet { height: 88vh; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        }
+        .sms-page-header {
+            background: var(--dark); color: #fff; padding: 13px 16px;
+            display: flex; justify-content: space-between; align-items: center; gap: 10px;
+        }
+        .sms-page-title { min-width: 0; }
+        .sms-page-title strong { font-size: 16px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sms-page-title small { font-size: 12px; color: #94a3b8; }
+        .sms-page-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .sms-exit-btn {
+            width: 36px; height: 36px; border-radius: 50%; border: none;
+            background: rgba(255,255,255,0.16); color: #fff; font-size: 22px;
+            font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: 0.18s;
+        }
+        .sms-exit-btn:hover { background: var(--danger); }
+
+        .chat-messages { flex: 1; overflow-y: auto; padding: 14px; background: #f1f5f9; display: flex; flex-direction: column; gap: 9px; }
         .msg-bubble { max-width: 82%; padding: 9px 13px; border-radius: 14px; font-size: 14px; line-height: 1.45; word-break: break-word; }
         .msg-admin { align-self: flex-end; background: var(--primary); color: #fff; border-bottom-right-radius: 4px; }
         .msg-customer { align-self: flex-start; background: #fff; color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
@@ -488,6 +590,7 @@
             padding: 14px;
             z-index: 1500;
         }
+        #quickProdModal, #confirmModal { z-index: 1700; }
         .modal-box { background: #fff; width: 100%; max-width: 600px; max-height: 92vh; border-radius: 16px; overflow-y: auto; animation: fadeIn 0.2s ease; }
         .modal-head { position: sticky; top: 0; background: #fff; padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; z-index: 5; }
         .close-btn { width: 32px; height: 32px; border-radius: 50%; border: none; background: #f1f5f9; font-size: 19px; cursor: pointer; }
@@ -522,11 +625,11 @@
         <div class="login-card">
             <div class="login-icon"><i class="fas fa-shield-halved"></i></div>
             <h2>BD UNIQUE BAZAR</h2>
-            <p>অ্যাডমিন কন্ট্রোল প্যানেল লগইন (v2.0.0)</p>
-            <div class="mode-hint-pill" id="loginModePill">🟡 ফায়ারবেস কানেক্ট হচ্ছে...</div>
+            <p>অ্যাডমিন কন্ট্রোল প্যানেল লগইন (v2.1.0)</p>
+            <div class="mode-hint-pill" id="loginModePill">🟡 ফায়ারবেস কানেক্ট হচ্ছে...</div>
             <div class="form-group">
-                <label>অ্যাডমিন পাসওয়ার্ড দিন</label>
-                <input type="password" id="adminLoginPass" class="form-control" placeholder="ডিফল্ট পাসওয়ার্ড: admin123">
+                <label>অ্যাডমিন পাসওয়ার্ড দিন</label>
+                <input type="password" id="adminLoginPass" class="form-control" placeholder="ডিফল্ট পাসওয়ার্ড: admin123">
             </div>
             <button class="btn btn-primary" style="width:100%; padding:11px; font-size:15px;" id="loginSubmitBtn" onclick="attemptAdminLogin()">
                 <i class="fas fa-right-to-bracket"></i> প্রবেশ করুন
@@ -541,7 +644,7 @@
                 <img id="adminHeaderLogo" src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Logo">
                 <div>
                     <h1>BD UNIQUE BAZAR</h1>
-                    <small>অ্যাডমিন প্যানেল • ImgBB + Firebase v2.0.0</small>
+                    <small>অ্যাডমিন প্যানেল • ImgBB + Firebase v2.1.0</small>
                 </div>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
@@ -555,7 +658,7 @@
                 <button class="tab-btn" data-tab="orders" onclick="switchTab('orders')"><i class="fas fa-box"></i> অর্ডার <span class="tab-badge" id="pendingOrdersBadge">0</span></button>
                 <button class="tab-btn" data-tab="products" onclick="switchTab('products')"><i class="fas fa-bag-shopping"></i> পণ্য</button>
                 <button class="tab-btn" data-tab="categories" onclick="switchTab('categories')"><i class="fas fa-tags"></i> ক্যাটাগরি</button>
-                <button class="tab-btn" data-tab="chats" onclick="switchTab('chats')"><i class="fas fa-comments"></i> লাইভ চ্যাট <span class="tab-badge" id="unreadChatBadge">0</span></button>
+                <button class="tab-btn" data-tab="chats" onclick="switchTab('chats')"><i class="fas fa-envelope-open-text"></i> এসএমএস / চ্যাট <span class="tab-badge" id="unreadChatBadge">0</span></button>
                 <button class="tab-btn" data-tab="notifications" onclick="switchTab('notifications')"><i class="fas fa-bell"></i> নোটিফিকেশন</button>
                 <button class="tab-btn" data-tab="customers" onclick="switchTab('customers')"><i class="fas fa-users"></i> ক্রেতা ও রিভিউ</button>
                 <button class="tab-btn" data-tab="settings" onclick="switchTab('settings')"><i class="fas fa-gear"></i> সেটিংস ও ভার্সন</button>
@@ -581,9 +684,9 @@
                     <div class="stat-icon" style="background:#dbeafe; color:#2563eb;"><i class="fas fa-box-open"></i></div>
                     <div><div class="stat-label">মোট পণ্য</div><div class="stat-val" id="statTotalProducts">0</div></div>
                 </div>
-                <div class="stat-card" onclick="switchTab('customers')">
-                    <div class="stat-icon" style="background:#f3e8ff; color:#7c3aed;"><i class="fas fa-users"></i></div>
-                    <div><div class="stat-label">নিবন্ধিত ক্রেতা</div><div class="stat-val" id="statTotalUsers">0</div></div>
+                <div class="stat-card" onclick="switchTab('chats')">
+                    <div class="stat-icon" style="background:#f3e8ff; color:#7c3aed;"><i class="fas fa-envelope"></i></div>
+                    <div><div class="stat-label">নতুন এসএমএস</div><div class="stat-val" id="statUnreadChats">0</div></div>
                 </div>
             </div>
 
@@ -599,7 +702,8 @@
                     <button class="btn btn-primary" onclick="openProductModal()"><i class="fas fa-plus"></i> নতুন পণ্য যোগ</button>
                     <button class="btn btn-success" onclick="switchTab('orders')"><i class="fas fa-truck-fast"></i> অর্ডার দেখুন</button>
                     <button class="btn btn-warning" onclick="switchTab('notifications')"><i class="fas fa-bullhorn"></i> নোটিফিকেশন পাঠান</button>
-                    <button class="btn btn-outline" onclick="switchTab('chats')"><i class="fas fa-comments"></i> কাস্টমার চ্যাট</button>
+                    <button class="btn btn-outline" onclick="switchTab('chats')"><i class="fas fa-envelope-open-text"></i> এসএমএস ইনবক্স</button>
+                    <button class="btn btn-outline" onclick="switchTab('settings')"><i class="fas fa-shield-halved"></i> ডেলিভারি ও ভুয়া অর্ডার সেটিংস</button>
                 </div>
             </div>
 
@@ -617,7 +721,7 @@
             <div class="panel-card">
                 <div class="panel-head">
                     <h3><i class="fas fa-box" style="color:var(--primary);"></i> সকল অর্ডার ম্যানেজমেন্ট</h3>
-                    <input type="text" id="orderSearchInput" class="form-control" style="max-width:260px;" placeholder="অর্ডার আইডি / মোবাইল / পণ্য কোড..." oninput="renderOrders()">
+                    <input type="text" id="orderSearchInput" class="form-control" style="max-width:260px;" placeholder="অর্ডার আইডি / মোবাইল / কোড..." oninput="renderOrders()">
                 </div>
                 <div class="filter-pills" id="orderFilterPills">
                     <button class="fpill active" data-status="all" onclick="setOrderFilter('all')">সব</button>
@@ -642,13 +746,13 @@
                     </div>
                 </div>
                 <div style="font-size:12px; color:var(--muted); margin-bottom:12px;">
-                    <i class="fas fa-circle-info"></i> প্রতিটি পণ্যে সর্বোচ্চ ৫টি ছবি (ImgBB অটো-আপলোড), YouTube/TikTok ভিডিও লিংক ও ইউনিক কোড যুক্ত থাকবে। সর্বশেষ ৫টি পণ্য অটো-স্লাইডারে দেখাবে।
+                    <i class="fas fa-circle-info"></i> পণ্যের ছবি ImgBB-তে আপলোডের সময় অটোমেটিক কোনায় <strong>BD UNIQUE BAZAR</strong> ওয়াটারমার্ক বসবে। সাইজ ও কালার ভ্যারিয়েন্ট যুক্ত করা যাবে।
                 </div>
                 <div class="item-list" id="adminProductsList"></div>
             </div>
         </section>
 
-        <!-- 4. DYNAMIC CATEGORIES VIEW (85+ Icons) -->
+        <!-- 4. DYNAMIC CATEGORIES VIEW -->
         <section class="view-section" id="view-categories">
             <div class="grid-2">
                 <div class="panel-card">
@@ -686,36 +790,19 @@
             </div>
         </section>
 
-        <!-- 5. LIVE CHAT REPLY VIEW -->
+        <!-- 5. SERIAL SMS / LIVE CHAT INBOX VIEW -->
         <section class="view-section" id="view-chats">
-            <div class="chat-layout">
-                <div class="chat-list-box">
-                    <div style="padding:12px 14px; border-bottom:1px solid var(--border); font-weight:700; background:#f8fafc;">
-                        <i class="fas fa-inbox"></i> কাস্টমার মেসেজ তালিকা
-                    </div>
-                    <div id="chatUsersList"></div>
-                </div>
-
-                <div class="chat-window">
-                    <div class="chat-win-head">
-                        <div>
-                            <strong id="activeChatName">কোনো চ্যাট সিলেক্ট করা হয়নি</strong>
-                            <div id="activeChatMobile" style="font-size:12px; color:var(--muted);"></div>
-                        </div>
-                        <button class="btn btn-outline btn-sm" id="chatCallBtn" style="display:none;"><i class="fas fa-phone"></i> কল</button>
-                    </div>
-                    <div class="chat-messages" id="adminChatMessages">
-                        <div class="empty-box"><i class="fas fa-comments"></i>রিপ্লাই দিতে বাম দিক থেকে একজন কাস্টমার বেছে নিন।<br><small>কাস্টমার পণ্যের কোড (BUB-XXXX) লিখলে তাতে ক্লিক করলেই পণ্য দেখতে পারবেন।</small></div>
-                    </div>
-                    <div class="chat-input-bar">
-                        <label class="chat-img-label" id="adminChatImgLabel" title="ছবি পাঠান (ImgBB)" style="opacity:0.5; pointer-events:none;">
-                            <i class="fas fa-image"></i>
-                            <input type="file" id="adminChatImgInput" accept="image/*" style="display:none;" onchange="sendAdminChatImage(this)">
-                        </label>
-                        <input type="text" id="adminChatInput" class="form-control" placeholder="কাস্টমারকে রিপ্লাই লিখুন..." disabled>
-                        <button class="btn btn-primary" id="adminChatSendBtn" onclick="sendAdminReply()" disabled><i class="fas fa-paper-plane"></i></button>
+            <div class="panel-card">
+                <div class="panel-head">
+                    <h3><i class="fas fa-envelope-open-text" style="color:var(--primary);"></i> এসএমএস / লাইভ চ্যাট ইনবক্স (সিরিয়াল তালিকা)</h3>
+                    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                        <input type="text" id="chatSearchInput" class="form-control" style="width:210px;" placeholder="নাম / মোবাইল / মেসেজ খুঁজুন..." oninput="renderChatUsersList()">
                     </div>
                 </div>
+                <div style="font-size:12.5px; color:var(--muted); margin-bottom:12px;">
+                    <i class="fas fa-circle-info"></i> নতুন মেসেজগুলো সবার উপরে সিরিয়ালে আসবে। যেকোনো কাস্টমারের নামে ক্লিক করলে বিস্তারিত এসএমএস পেইজ খুলবে এবং <strong>×</strong> বাটনে ক্লিক করে বের হওয়া যাবে।
+                </div>
+                <div class="sms-serial-list" id="chatUsersList"></div>
             </div>
         </section>
 
@@ -764,7 +851,7 @@
             <div class="grid-2">
                 <div class="panel-card">
                     <div class="panel-head">
-                        <h3><i class="fas fa-users" style="color:var(--primary);"></i> নিবন্ধিত ক্রেতারা</h3>
+                        <h3><i class="fas fa-users" style="color:var(--primary);"></i> নিবন্ধিত ক্রেতারা (<span id="custCountSpan">0</span>)</h3>
                         <input type="text" id="custSearchInput" class="form-control" style="max-width:190px;" placeholder="নাম/মোবাইল..." oninput="renderCustomers()">
                     </div>
                     <div class="item-list" id="customersList"></div>
@@ -779,13 +866,45 @@
             </div>
         </section>
 
-        <!-- 8. SETTINGS, VERSIONING & JSON BACKUP VIEW -->
+        <!-- 8. SETTINGS, DELIVERY ZONES, ANTI-FAKE TOGGLE & VERSIONING -->
         <section class="view-section" id="view-settings">
             <div class="grid-2">
                 <div class="panel-card">
                     <div class="panel-head">
-                        <h3><i class="fas fa-sliders" style="color:var(--primary);"></i> শপ, পেমেন্ট ও ভার্সন সেটিংস</h3>
+                        <h3><i class="fas fa-sliders" style="color:var(--primary);"></i> শপ, ডেলিভারি ও ভুয়া অর্ডার সেটিংস</h3>
                     </div>
+
+                    <!-- Anti-Fake Order Toggle -->
+                    <div class="toggle-card">
+                        <div>
+                            <div style="font-size:14px; font-weight:700; color:#92400e;">
+                                <i class="fas fa-shield-halved"></i> অগ্রিম ডেলিভারি চার্জ বাধ্যতামূলক করুন
+                            </div>
+                            <div style="font-size:12px; color:#78350f; margin-top:2px; line-height:1.45;">
+                                চালু থাকলে কাস্টমারকে শুধু ডেলিভারি চার্জ বিকাশ/নগদে দিয়ে অর্ডার কনফার্ম করতে হবে, বাকি টাকা ক্যাশ অন ডেলিভারি।
+                            </div>
+                            <span id="advToggleStatusBadge" style="display:inline-block; margin-top:5px; font-size:11px; font-weight:700; padding:2px 8px; border-radius:99px; background:#e2e8f0; color:#334155;">বর্তমানে: বন্ধ</span>
+                        </div>
+                        <label class="switch-wrap">
+                            <input type="checkbox" id="setRequireAdvanceDelivery" onchange="updateAdvanceToggleBadge()">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+
+                    <!-- Location-Based Delivery Zones Manager -->
+                    <div class="zone-editor-box">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <label style="margin:0; font-size:13.5px; font-weight:700; color:var(--dark);">
+                                <i class="fas fa-map-location-dot" style="color:var(--primary);"></i> স্থানভেদে ডেলিভারি চার্জ
+                            </label>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="addDeliveryZoneRow()">
+                                <i class="fas fa-plus"></i> এরিয়া যোগ
+                            </button>
+                        </div>
+                        <div id="deliveryZonesEditor"></div>
+                        <small style="color:var(--muted); display:block;">যেমন: ঢাকার ভিতরে (৬০), ঢাকার বাইরে (১২০), চট্টগ্রাম শহর (৮০) — চেকআউটে কাস্টমার এরিয়া সিলেক্ট করতে পারবে।</small>
+                    </div>
+
                     <div class="form-group">
                         <label>লোগো URL (অথবা গ্যালারি থেকে ImgBB-তে আপলোড করুন)</label>
                         <input type="text" id="setLogoUrl" class="form-control" placeholder="https://...">
@@ -793,13 +912,9 @@
                     </div>
                     <div class="form-group">
                         <label>টপ নোটিশ বার (খালি রাখলে হাইড থাকবে)</label>
-                        <input type="text" id="setNoticeText" class="form-control" placeholder="🎉 সারাদেশে ক্যাশ অন ডেলিভারি!">
+                        <input type="text" id="setNoticeText" class="form-control" placeholder="🎉 সারাদেশে হোম ডেলিভারি চলছে!">
                     </div>
-                    <div class="grid-3">
-                        <div class="form-group">
-                            <label>ডেলিভারি চার্জ (৳)</label>
-                            <input type="number" id="setDeliveryCharge" class="form-control" placeholder="60">
-                        </div>
+                    <div class="grid-2">
                         <div class="form-group">
                             <label>বিকাশ নম্বর</label>
                             <input type="tel" id="setBkash" class="form-control" placeholder="017XXXXXXXX">
@@ -814,10 +929,10 @@
                     <div class="form-group" style="background:#eff6ff; padding:12px; border-radius:10px; border:1px solid #bfdbfe;">
                         <label style="color:#1e40af;"><i class="fas fa-code-branch"></i> কাস্টমার অ্যাপ ভার্সন (গিটহাব অটো আপডেট কন্ট্রোল)</label>
                         <div style="display:flex; gap:8px;">
-                            <input type="text" id="setAppVersion" class="form-control" placeholder="2.0.0">
-                            <button type="button" class="btn btn-primary btn-sm" onclick="bumpAppVersion()">+ ভার্সন বাড়ান</button>
+                            <input type="text" id="setAppVersion" class="form-control" placeholder="2.1.0">
+                            <button type="button" class="btn btn-primary btn-sm" onclick="bumpAppVersion()">+ ভার্সন বাড়ান</button>
                         </div>
-                        <small style="color:#475569; display:block; margin-top:4px;">গিটহাবে কোড পরিবর্তন করলে এখান থেকে ভার্সন বাড়ালেই কাস্টমারের ফোনে অটো আপডেট বার চলে যাবে।</small>
+                        <small style="color:#475569; display:block; margin-top:4px;">গিটহাবে কোড পরিবর্তন করলে এখান থেকে ভার্সন বাড়ালেই কাস্টমারের ফোনে অটো আপডেট বার চলে যাবে।</small>
                     </div>
 
                     <button class="btn btn-success" style="width:100%;" onclick="saveShopSettings()">
@@ -829,14 +944,14 @@
                     <!-- Admin Password Security -->
                     <div class="panel-card">
                         <div class="panel-head">
-                            <h3><i class="fas fa-key" style="color:var(--danger);"></i> অ্যাডমিন পাসওয়ার্ড পরিবর্তন</h3>
+                            <h3><i class="fas fa-key" style="color:var(--danger);"></i> অ্যাডমিন পাসওয়ার্ড পরিবর্তন</h3>
                         </div>
                         <div class="form-group">
-                            <label>নতুন অ্যাডমিন পাসওয়ার্ড</label>
+                            <label>নতুন অ্যাডমিন পাসওয়ার্ড</label>
                             <input type="password" id="newAdminPassInput" class="form-control" placeholder="কমপক্ষে ৪ অক্ষর">
                         </div>
                         <button class="btn btn-danger" style="width:100%;" onclick="changeAdminPassword()">
-                            <i class="fas fa-lock"></i> পাসওয়ার্ড পরিবর্তন করুন
+                            <i class="fas fa-lock"></i> পাসওয়ার্ড পরিবর্তন করুন
                         </button>
                     </div>
 
@@ -864,9 +979,35 @@
 
     </main>
 
-    <!-- ================= MODALS ================= -->
+    <!-- ================= MODALS & SMS DETAIL PAGE ================= -->
 
-    <!-- Add / Edit Product Modal (5 ImgBB Photos + Video Link + Auto Product Code) -->
+    <!-- Opened SMS / Chat Detail Page Overlay (With × Exit Button) -->
+    <div class="sms-page-overlay" id="smsDetailOverlay">
+        <div class="sms-page-sheet">
+            <div class="sms-page-header">
+                <div class="sms-page-title">
+                    <strong id="activeChatName">কাস্টমার</strong>
+                    <small id="activeChatMobile">01XXXXXXXXX</small>
+                </div>
+                <div class="sms-page-actions">
+                    <button class="btn btn-success btn-sm" id="chatCallBtn"><i class="fas fa-phone"></i> কল</button>
+                    <button class="btn btn-danger btn-sm" id="chatDeleteBtn" title="চ্যাট মুছুন"><i class="fas fa-trash"></i></button>
+                    <button class="sms-exit-btn" onclick="closeChatDetailPage()" title="পেইজ থেকে বের হন">&times;</button>
+                </div>
+            </div>
+            <div class="chat-messages" id="adminChatMessages"></div>
+            <div class="chat-input-bar">
+                <label class="chat-img-label" id="adminChatImgLabel" title="ছবি পাঠান (ImgBB)">
+                    <i class="fas fa-image"></i>
+                    <input type="file" id="adminChatImgInput" accept="image/*" style="display:none;" onchange="sendAdminChatImage(this)">
+                </label>
+                <input type="text" id="adminChatInput" class="form-control" placeholder="কাস্টমারকে রিপ্লাই লিখুন...">
+                <button class="btn btn-primary" id="adminChatSendBtn" onclick="sendAdminReply()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add / Edit Product Modal (5 ImgBB Auto-Watermarked Photos + Size & Color Variants + Video) -->
     <div class="modal-overlay" id="productModal">
         <div class="modal-box">
             <div class="modal-head">
@@ -876,25 +1017,31 @@
             <div class="modal-body">
                 <input type="hidden" id="editProdId">
 
-                <!-- 5-Image ImgBB Uploader -->
+                <!-- 5-Image ImgBB Uploader With Auto Watermark -->
                 <div class="form-group">
-                    <label>পণ্যের ছবি (সর্বোচ্চ ৫টি — ImgBB-তে অটো আপলোড হবে) *</label>
+                    <label>পণ্যের ছবি (সর্বোচ্চ ৫টি — অটোমেটিক BD UNIQUE BAZAR ওয়াটারমার্কসহ আপলোড হবে) *</label>
                     <div class="multi-img-grid" id="multiImgGrid"></div>
                     <label class="upload-drop-btn" id="multiUploadLabel">
                         <i class="fas fa-cloud-arrow-up"></i>
-                        <span>গ্যালারি থেকে ১–৫টি ছবি সিলেক্ট করুন (ImgBB)</span>
+                        <span>গ্যালারি থেকে ১–৫টি ছবি সিলেক্ট করুন (অটো ওয়াটারমার্ক + ImgBB)</span>
                         <input type="file" id="prodMultiFileInput" accept="image/*" multiple style="display:none;" onchange="handleMultiImageUpload(this)">
                     </label>
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; font-size:12px; color:#059669; font-weight:700;">
+                        <label style="display:inline-flex; align-items:center; gap:6px; margin:0; cursor:pointer; color:#059669;">
+                            <input type="checkbox" id="autoWatermarkCheck" checked>
+                            <span>ছবির কোনায় অটো "BD UNIQUE BAZAR" ওয়াটারমার্ক বসাও</span>
+                        </label>
+                    </div>
                     <div style="display:flex; gap:6px;">
-                        <input type="url" id="manualImgUrlInput" class="form-control" placeholder="অথবা ছবির সরাসরি URL দিয়ে যোগ করুন">
+                        <input type="url" id="manualImgUrlInput" class="form-control" placeholder="অথবা ছবির সরাসরি URL দিয়ে যোগ করুন">
                         <button type="button" class="btn btn-outline btn-sm" onclick="addManualImageUrl()">যোগ</button>
                     </div>
                 </div>
 
-                <!-- Product Code + Name -->
+                <!-- Product Code + Category -->
                 <div class="grid-2">
                     <div class="form-group">
-                        <label>পণ্যের ইউনিক কোড (অটো তৈরি হয়) *</label>
+                        <label>পণ্যের ইউনিক কোড (অটো তৈরি হয়) *</label>
                         <div style="display:flex; gap:6px;">
                             <input type="text" id="prodCode" class="form-control" style="font-weight:700; color:var(--primary);" placeholder="BUB-1001">
                             <button type="button" class="btn btn-outline btn-sm" onclick="regenerateProductCode()" title="নতুন কোড তৈরি"><i class="fas fa-dice"></i></button>
@@ -908,12 +1055,12 @@
 
                 <div class="form-group">
                     <label>পণ্যের নাম *</label>
-                    <input type="text" id="prodName" class="form-control" placeholder="যেমন: স্মার্ট ওয়াচ X12 প্রো">
+                    <input type="text" id="prodName" class="form-control" placeholder="যেমন: প্রিমিয়াম কটন পাঞ্জাবি / স্নিকার্স">
                 </div>
 
                 <div class="grid-3">
                     <div class="form-group">
-                        <label>বিক্রয় মূল্য (৳) *</label>
+                        <label>বিক্রয় মূল্য (৳) *</label>
                         <input type="number" id="prodPrice" class="form-control" placeholder="1250">
                     </div>
                     <div class="form-group">
@@ -926,6 +1073,26 @@
                     </div>
                 </div>
 
+                <!-- Size & Color Variants -->
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label><i class="fas fa-ruler" style="color:var(--primary);"></i> সাইজ ভ্যারিয়েন্ট (কমা দিয়ে — ঐচ্ছিক)</label>
+                        <input type="text" id="prodSizes" class="form-control" placeholder="যেমন: M, L, XL বা 40, 41, 42">
+                        <div class="preset-row">
+                            <button type="button" class="preset-chip" onclick="fillPreset('prodSizes', 'S, M, L, XL, XXL')">পোশাক (S–XXL)</button>
+                            <button type="button" class="preset-chip" onclick="fillPreset('prodSizes', '39, 40, 41, 42, 43, 44')">জুতা (39–44)</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-palette" style="color:var(--primary);"></i> কালার ভ্যারিয়েন্ট (কমা দিয়ে — ঐচ্ছিক)</label>
+                        <input type="text" id="prodColors" class="form-control" placeholder="যেমন: কালো, সাদা, নেভি ব্লু, লাল">
+                        <div class="preset-row">
+                            <button type="button" class="preset-chip" onclick="fillPreset('prodColors', 'কালো, সাদা, নেভি ব্লু')">বেসিক কালার</button>
+                            <button type="button" class="preset-chip" onclick="fillPreset('prodColors', 'কালো, সিলভার, গোল্ডেন')">গ্যাজেট কালার</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- YouTube / TikTok Video Link -->
                 <div class="form-group">
                     <label><i class="fab fa-youtube" style="color:#ef4444;"></i> / <i class="fab fa-tiktok"></i> ভিডিও লিংক (YouTube বা TikTok — ঐচ্ছিক)</label>
@@ -934,7 +1101,7 @@
 
                 <div class="form-group">
                     <label>পণ্যের বিস্তারিত বিবরণ</label>
-                    <textarea id="prodDesc" class="form-control" rows="3" placeholder="পণ্যের গুণাগুণ, সাইজ, কালার, ওয়ারেন্টি ইত্যাদি লিখুন..."></textarea>
+                    <textarea id="prodDesc" class="form-control" rows="3" placeholder="পণ্যের গুণাগুণ, সাইজ, কালার, ওয়ারেন্টি ইত্যাদি লিখুন..."></textarea>
                 </div>
 
                 <div class="form-group" id="bumpSliderWrap" style="display:none;">
@@ -951,7 +1118,7 @@
         </div>
     </div>
 
-    <!-- Quick Product Info Modal (When clicking Product Code in Chat or Quick Search) -->
+    <!-- Quick Product Info Modal -->
     <div class="modal-overlay" id="quickProdModal">
         <div class="modal-box" style="max-width:420px;">
             <div class="modal-head">
@@ -999,9 +1166,8 @@
         // 1. CONFIGURATION (Firebase + ImgBB)
         // ============================================================
         const IMGBB_API_KEY = "eddb89bbce58d882cf0a41da7af0d62d";
+        const WATERMARK_TEXT = "BD UNIQUE BAZAR";
 
-        // নোট: Singapore সার্ভার হলে databaseURL হবে:
-        // "https://bd-unique-bazar-default-rtdb.asia-southeast1.firebasedatabase.app"
         const firebaseConfig = {
             apiKey: "AIzaSyCBMSVaRP4x6AosZmsnH8MFuuLI94xLbpY",
             authDomain: "bd-unique-bazar.firebaseapp.com",
@@ -1016,6 +1182,13 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const fbDb = firebase.database();
 
+        // কাস্টমার অ্যাপের ক্যাশ রিয়েল-টাইম আপডেট ট্রিগার
+        async function bumpDataVersion() {
+            try {
+                await fbDb.ref('meta/dataVersion').set(Date.now());
+            } catch (e) {}
+        }
+
         // Connection Status Indicator
         fbDb.ref('.info/connected').on('value', (snap) => {
             const connected = snap.val() === true;
@@ -1024,22 +1197,66 @@
             if (connected) {
                 badge.classList.remove('offline');
                 badge.innerHTML = '<span></span> LIVE';
-                pill.innerText = '🟢 ফায়ারবেস লাইভ কানেক্টেড';
+                pill.innerText = '🟢 ফায়ারবেস লাইভ কানেক্টেড';
                 pill.style.background = '#dcfce7';
                 pill.style.color = '#166534';
             } else {
                 badge.classList.add('offline');
                 badge.innerHTML = '<span></span> OFFLINE';
-                pill.innerText = '🟡 ফায়ারবেস কানেক্ট হচ্ছে...';
+                pill.innerText = '🟡 ফায়ারবেস কানেক্ট হচ্ছে...';
                 pill.style.background = '#fef3c7';
                 pill.style.color = '#92400e';
             }
         });
 
         // ============================================================
-        // 2. IMGBB UPLOAD ENGINE (With Auto Resize/Compression)
+        // 2. IMGBB UPLOAD ENGINE (With Auto Corner Watermark)
         // ============================================================
-        function compressToBase64Raw(file, maxWidth = 1000, quality = 0.82) {
+        function drawCornerWatermark(ctx, w, h, text) {
+            const fontSize = Math.max(15, Math.round(w * 0.035));
+            const padX = Math.round(fontSize * 0.65);
+            const padY = Math.round(fontSize * 0.38);
+            const margin = Math.max(12, Math.round(w * 0.025));
+
+            ctx.save();
+            ctx.font = `800 ${fontSize}px Poppins, sans-serif`;
+            const textWidth = ctx.measureText(text).width;
+            const boxW = textWidth + padX * 2;
+            const boxH = fontSize + padY * 2;
+            const boxX = w - boxW - margin;
+            const boxY = h - boxH - margin;
+            const radius = Math.round(boxH * 0.28);
+
+            // Rounded translucent dark badge
+            ctx.beginPath();
+            ctx.moveTo(boxX + radius, boxY);
+            ctx.lineTo(boxX + boxW - radius, boxY);
+            ctx.quadraticCurveTo(boxX + boxW, boxY, boxX + boxW, boxY + radius);
+            ctx.lineTo(boxX + boxW, boxY + boxH - radius);
+            ctx.quadraticCurveTo(boxX + boxW, boxY + boxH, boxX + boxW - radius, boxY + boxH);
+            ctx.lineTo(boxX + radius, boxY + boxH);
+            ctx.quadraticCurveTo(boxX, boxY + boxH, boxX, boxY + boxH - radius);
+            ctx.lineTo(boxX, boxY + radius);
+            ctx.quadraticCurveTo(boxX, boxY, boxX + radius, boxY);
+            ctx.closePath();
+
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.62)';
+            ctx.fill();
+            ctx.lineWidth = Math.max(1.5, w * 0.002);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.stroke();
+
+            // Crisp white brand text
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.94)';
+            ctx.textBaseline = 'middle';
+            ctx.textAlign = 'left';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
+            ctx.shadowBlur = 4;
+            ctx.fillText(text, boxX + padX, boxY + boxH / 2 + 1);
+            ctx.restore();
+        }
+
+        function compressToBase64Raw(file, maxWidth = 1000, quality = 0.84, addWatermark = false) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -1049,7 +1266,11 @@
                         let w = img.width, h = img.height;
                         if (w > maxWidth) { h = Math.round((h * maxWidth) / w); w = maxWidth; }
                         canvas.width = w; canvas.height = h;
-                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        if (addWatermark) {
+                            drawCornerWatermark(ctx, w, h, WATERMARK_TEXT);
+                        }
                         resolve(canvas.toDataURL('image/jpeg', quality).split(',')[1]);
                     };
                     img.onerror = reject;
@@ -1060,8 +1281,8 @@
             });
         }
 
-        async function uploadToImgBB(file, maxWidth = 1000) {
-            const base64 = await compressToBase64Raw(file, maxWidth, 0.82);
+        async function uploadToImgBB(file, maxWidth = 1000, addWatermark = false) {
+            const base64 = await compressToBase64Raw(file, maxWidth, 0.84, addWatermark);
             const form = new FormData();
             form.append('image', base64);
             const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
@@ -1074,7 +1295,7 @@
         }
 
         // ============================================================
-        // 3. APP STATE & 85+ CATEGORY ICONS
+        // 3. APP STATE & CATEGORY ICONS (All Valid Solid Icons)
         // ============================================================
         let settingsData = {};
         let categoriesData = {};
@@ -1089,31 +1310,26 @@
         let activeChatMobile = null;
         let activeChatRef = null;
         let activeChatHandler = null;
-        let modalProductImages = []; // Up to 5 ImgBB image URLs
+        let modalProductImages = [];
+        let editableDeliveryZones = [];
 
         const categoryIconsList = [
-            // Electronics & Gadgets
             'fa-microchip', 'fa-mobile-screen', 'fa-laptop', 'fa-desktop', 'fa-tablet-screen-button',
             'fa-headphones', 'fa-headset', 'fa-camera', 'fa-video', 'fa-tv',
             'fa-plug', 'fa-battery-full', 'fa-charging-station', 'fa-keyboard', 'fa-computer-mouse',
-            'fa-print', 'fa-wifi', 'fa-bluetooth-b', 'fa-gamepad', 'fa-microscope',
-            // Fashion & Accessories
+            'fa-print', 'fa-wifi', 'fa-tower-broadcast', 'fa-gamepad', 'fa-microscope',
             'fa-shirt', 'fa-vest', 'fa-socks', 'fa-hat-cowboy', 'fa-glasses',
             'fa-shoe-prints', 'fa-bag-shopping', 'fa-briefcase', 'fa-suitcase', 'fa-wallet',
             'fa-clock', 'fa-gem', 'fa-ring', 'fa-crown', 'fa-ribbon',
             'fa-person-dress', 'fa-user-tie', 'fa-mitten', 'fa-umbrella', 'fa-scissors',
-            // Beauty & Health
             'fa-spray-can-sparkles', 'fa-wand-magic-sparkles', 'fa-pump-soap', 'fa-spa', 'fa-heart-pulse',
             'fa-pills', 'fa-kit-medical', 'fa-tooth', 'fa-eye', 'fa-bottle-droplet',
-            // Grocery & Food
             'fa-basket-shopping', 'fa-cart-shopping', 'fa-apple-whole', 'fa-carrot', 'fa-pepper-hot',
             'fa-bread-slice', 'fa-cheese', 'fa-egg', 'fa-fish', 'fa-drumstick-bite',
             'fa-mug-hot', 'fa-bottle-water', 'fa-ice-cream', 'fa-cake-candles', 'fa-cookie-bite',
-            // Home, Kitchen & Furniture
             'fa-couch', 'fa-bed', 'fa-chair', 'fa-kitchen-set', 'fa-utensils',
             'fa-blender', 'fa-fire-burner', 'fa-lightbulb', 'fa-fan', 'fa-bath',
             'fa-broom', 'fa-house', 'fa-screwdriver-wrench', 'fa-hammer', 'fa-paint-roller',
-            // Kids, Sports, Books, Vehicles & Gifts
             'fa-baby', 'fa-baby-carriage', 'fa-puzzle-piece', 'fa-robot', 'fa-futbol',
             'fa-basketball', 'fa-dumbbell', 'fa-bicycle', 'fa-motorcycle', 'fa-car',
             'fa-book', 'fa-pen-nib', 'fa-graduation-cap', 'fa-guitar', 'fa-gift',
@@ -1165,12 +1381,40 @@
         document.querySelectorAll('.modal-overlay').forEach(ov => {
             ov.addEventListener('click', (e) => { if (e.target === ov) ov.style.display = 'none'; });
         });
+        document.getElementById('smsDetailOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'smsDetailOverlay') closeChatDetailPage();
+        });
 
         function getProductImages(p) {
             if (!p) return [];
             if (Array.isArray(p.images) && p.images.length) return p.images.filter(Boolean);
             if (p.images && typeof p.images === 'object') return Object.values(p.images).filter(Boolean);
             return p.image ? [p.image] : [];
+        }
+
+        function parseVariantList(raw) {
+            if (!raw) return [];
+            if (Array.isArray(raw)) return raw.map(v => String(v || '').trim()).filter(Boolean);
+            if (typeof raw === 'object') return Object.values(raw).map(v => String(v || '').trim()).filter(Boolean);
+            return String(raw).split(/[,،|]/).map(v => v.trim()).filter(Boolean);
+        }
+
+        function formatVariantText(item) {
+            const parts = [];
+            if (item.size) parts.push(`সাইজ: ${item.size}`);
+            if (item.color) parts.push(`কালার: ${item.color}`);
+            return parts.join(', ');
+        }
+
+        function getPaymentMethodLabel(method) {
+            switch (method) {
+                case 'COD': return 'ক্যাশ অন ডেলিভারি';
+                case 'bKash': return 'বিকাশ (সম্পূর্ণ পেমেন্ট)';
+                case 'Nagad': return 'নগদ (সম্পূর্ণ পেমেন্ট)';
+                case 'Advance-bKash': return 'বিকাশে অগ্রিম ডেলিভারি + বাকি COD';
+                case 'Advance-Nagad': return 'নগদে অগ্রিম ডেলিভারি + বাকি COD';
+                default: return method || 'COD';
+            }
         }
 
         function getProductCode(id, p) {
@@ -1187,6 +1431,10 @@
             return 'BUB-' + Date.now().toString().slice(-4);
         }
 
+        function fillPreset(inputId, value) {
+            document.getElementById(inputId).value = value;
+        }
+
         // ============================================================
         // 5. ADMIN LOGIN
         // ============================================================
@@ -1198,7 +1446,7 @@
                 await fbDb.ref('adminConfig/password').set('admin123');
                 return 'admin123';
             } catch (e) {
-                showToast("ফায়ারবেস রেসপন্স ধীর — databaseURL ও Rules চেক করুন", "error");
+                showToast("ফায়ারবেস রেসপন্স ধীর — databaseURL ও Rules চেক করুন", "error");
                 return 'admin123';
             }
         }
@@ -1207,7 +1455,7 @@
             const inputEl = document.getElementById('adminLoginPass');
             const btn = document.getElementById('loginSubmitBtn');
             const inputPass = inputEl.value.trim();
-            if (!inputPass) return showToast("পাসওয়ার্ড লিখুন", "error");
+            if (!inputPass) return showToast("পাসওয়ার্ড লিখুন", "error");
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> যাচাই হচ্ছে...';
@@ -1222,7 +1470,7 @@
                 showToast("অ্যাডমিন প্যানেলে স্বাগতম!", "success");
                 startAdminListeners();
             } else {
-                showToast("পাসওয়ার্ড ভুল হয়েছে! (ডিফল্ট: admin123)", "error");
+                showToast("পাসওয়ার্ড ভুল হয়েছে! (ডিফল্ট: admin123)", "error");
             }
         }
 
@@ -1239,13 +1487,13 @@
 
         async function changeAdminPassword() {
             const newPass = document.getElementById('newAdminPassInput').value.trim();
-            if (newPass.length < 4) return showToast("কমপক্ষে ৪ অক্ষরের পাসওয়ার্ড দিন", "error");
+            if (newPass.length < 4) return showToast("কমপক্ষে ৪ অক্ষরের পাসওয়ার্ড দিন", "error");
             try {
                 await fbDb.ref('adminConfig/password').set(newPass);
                 document.getElementById('newAdminPassInput').value = '';
-                showToast("অ্যাডমিন পাসওয়ার্ড আপডেট হয়েছে!", "success");
+                showToast("অ্যাডমিন পাসওয়ার্ড আপডেট হয়েছে!", "success");
             } catch (e) {
-                showToast("পাসওয়ার্ড পরিবর্তন করা যায়নি!", "error");
+                showToast("পাসওয়ার্ড পরিবর্তন করা যায়নি!", "error");
             }
         }
 
@@ -1309,17 +1557,18 @@
             const ordersArr = Object.values(ordersData);
             const pendingCount = ordersArr.filter(o => (o.status || 'Pending') === 'Pending').length;
             const deliveredRev = ordersArr.filter(o => o.status === 'Delivered').reduce((sum, o) => sum + Number(o.total || 0), 0);
+            const unreadChats = Object.values(chatsData).filter(c => c.meta && c.meta.unreadAdmin).length;
 
             document.getElementById('statPendingOrders').innerText = pendingCount;
             document.getElementById('statTotalRevenue').innerText = `৳${deliveredRev}`;
             document.getElementById('statTotalProducts').innerText = Object.keys(productsData).length;
-            document.getElementById('statTotalUsers').innerText = Object.keys(usersData).length;
+            document.getElementById('statUnreadChats').innerText = unreadChats;
+            document.getElementById('custCountSpan').innerText = Object.keys(usersData).length;
 
             const orderBadge = document.getElementById('pendingOrdersBadge');
             orderBadge.innerText = pendingCount;
             orderBadge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
 
-            const unreadChats = Object.values(chatsData).filter(c => c.meta && c.meta.unreadAdmin).length;
             const chatBadge = document.getElementById('unreadChatBadge');
             chatBadge.innerText = unreadChats;
             chatBadge.style.display = unreadChats > 0 ? 'inline-block' : 'none';
@@ -1338,7 +1587,7 @@
                 <div class="prod-row" style="margin-bottom:8px; cursor:pointer;" onclick="switchTab('orders')">
                     <div class="prod-meta">
                         <div class="prod-name">#${escapeHtml(o.orderId || o.id)} — ${escapeHtml(o.customerName)}</div>
-                        <div class="prod-sub">${escapeHtml(o.contactMobile || o.userMobile)} • ৳${o.total} • ${formatDate(o.createdAt)}</div>
+                        <div class="prod-sub">${escapeHtml(o.contactMobile || o.userMobile)} • ৳${o.total} ${o.deliveryZoneName ? `• ${escapeHtml(o.deliveryZoneName)}` : ''} • ${formatDate(o.createdAt)}</div>
                     </div>
                     <span class="status-pill status-${escapeHtml(o.status || 'Pending')}">${escapeHtml(o.status || 'Pending')}</span>
                 </div>
@@ -1355,23 +1604,27 @@
             const q = codeQuery.trim().toUpperCase();
             const found = Object.entries(productsData).find(([id, p]) => getProductCode(id, p).toUpperCase() === q);
             if (!found) {
-                return showToast(`কোড "${q}" দিয়ে কোনো পণ্য পাওয়া যায়নি!`, "error");
+                return showToast(`কোড "${q}" দিয়ে কোনো পণ্য পাওয়া যায়নি!`, "error");
             }
             const [id, p] = found;
             const imgs = getProductImages(p);
+            const sizes = parseVariantList(p.sizes);
+            const colors = parseVariantList(p.colors);
             document.getElementById('quickProdBody').innerHTML = `
                 <div style="text-align:center;">
-                    <img src="${escapeHtml(imgs[0] || '')}" style="width:100%; height:190px; object-fit:cover; border-radius:12px; margin-bottom:10px;" onerror="this.src='https://via.placeholder.com/300'">
+                    <img src="${escapeHtml(imgs[0] || '')}" style="width:100%; height:190px; object-fit:cover; border-radius:12px; margin-bottom:10px;" onerror="this.src='https://placehold.co/300x200/e2e8f0/64748b?text=No+Image'">
                     <div class="code-pill" style="font-size:13px; margin-bottom:6px;">${escapeHtml(getProductCode(id, p))}</div>
                     <h3 style="margin-bottom:4px;">${escapeHtml(p.name)}</h3>
                     <div style="font-size:20px; font-weight:800; color:var(--primary); margin-bottom:6px;">
                         ৳${p.price} ${p.oldPrice ? `<s style="font-size:13px; color:#94a3b8;">৳${p.oldPrice}</s>` : ''}
                     </div>
-                    <div style="font-size:13px; color:var(--muted); margin-bottom:12px;">
+                    <div style="font-size:13px; color:var(--muted); margin-bottom:8px;">
                         ক্যাটাগরি: ${escapeHtml(getCatName(p.category))} • স্টক: <strong>${p.stock ?? 0}</strong> • ছবি: ${imgs.length}টি
                     </div>
-                    <div style="display:flex; gap:8px;">
-                        <button class="btn btn-primary" style="flex:1;" onclick="closeModal('quickProdModal'); openProductModal('${id}');">
+                    ${sizes.length ? `<div style="margin-bottom:4px;"><span class="variant-pill">সাইজ: ${escapeHtml(sizes.join(', '))}</span></div>` : ''}
+                    ${colors.length ? `<div style="margin-bottom:10px;"><span class="variant-pill">কালার: ${escapeHtml(colors.join(', '))}</span></div>` : ''}
+                    <div style="display:flex; gap:8px; margin-top:10px;">
+                        <button class="btn btn-primary" style="flex:1;" onclick="closeModal('quickProdModal'); closeChatDetailPage(); openProductModal('${id}');">
                             <i class="fas fa-pen"></i> এডিট করুন
                         </button>
                         <button class="btn btn-outline" style="flex:1;" onclick="closeModal('quickProdModal')">বন্ধ করুন</button>
@@ -1382,7 +1635,7 @@
         }
 
         // ============================================================
-        // 8. ORDERS MANAGEMENT
+        // 8. ORDERS MANAGEMENT (Variants, Zones, Advance Paid, Live Sync)
         // ============================================================
         function setOrderFilter(status) {
             currentOrderFilter = status;
@@ -1399,13 +1652,13 @@
                 .filter(o => {
                     const st = o.status || 'Pending';
                     const matchStatus = currentOrderFilter === 'all' || st === currentOrderFilter;
-                    const itemsCodes = (o.items || []).map(i => (i.code || '') + ' ' + (i.name || '')).join(' ').toLowerCase();
+                    const itemsText = (o.items || []).map(i => `${i.code || ''} ${i.name || ''} ${i.size || ''} ${i.color || ''}`).join(' ').toLowerCase();
                     const matchQ = !q ||
                         (o.orderId || o.key).toLowerCase().includes(q) ||
                         (o.customerName || '').toLowerCase().includes(q) ||
                         (o.userMobile || '').includes(q) ||
                         (o.contactMobile || '').includes(q) ||
-                        itemsCodes.includes(q);
+                        itemsText.includes(q);
                     return matchStatus && matchQ;
                 })
                 .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
@@ -1416,29 +1669,51 @@
             }
 
             container.innerHTML = list.map(o => {
-                const itemsHtml = (o.items || []).map(i => `
-                    <div>• <strong>${escapeHtml(i.name)}</strong> ${i.code ? `<span class="code-pill" style="cursor:pointer;" onclick="showProductByCode('${escapeHtml(i.code)}')">${escapeHtml(i.code)}</span>` : ''} × ${i.qty} = ৳${i.price * i.qty}</div>
-                `).join('');
+                const itemsHtml = (o.items || []).map(i => {
+                    const vTxt = formatVariantText(i);
+                    return `
+                        <div style="margin-bottom:3px;">
+                            • <strong>${escapeHtml(i.name)}</strong>
+                            ${i.code ? `<span class="code-pill" style="cursor:pointer;" onclick="showProductByCode('${escapeHtml(i.code)}')">${escapeHtml(i.code)}</span>` : ''}
+                            ${vTxt ? `<span class="variant-pill">${escapeHtml(vTxt)}</span>` : ''}
+                            × ${i.qty} = ৳${i.price * i.qty}
+                        </div>
+                    `;
+                }).join('');
+
                 const st = o.status || 'Pending';
+                const advPaid = Number(o.advancePaid || 0);
+                const dueAmt = o.dueAmount !== undefined ? Number(o.dueAmount) : (o.paymentMethod === 'COD' ? Number(o.total) : 0);
+                const cancelledNote = (st === 'Cancelled' && o.cancelledBy === 'customer')
+                    ? `<span style="font-size:11px; background:#fee2e2; color:#991b1b; padding:2px 7px; border-radius:6px; font-weight:700; margin-left:6px;">কাস্টমার বাতিল করেছে</span>`
+                    : '';
+
                 return `
                     <div class="order-card">
                         <div class="order-head">
                             <div>
                                 <strong style="font-size:15px;">#${escapeHtml(o.orderId || o.key)}</strong>
                                 <span style="font-size:12px; color:var(--muted); margin-left:6px;">${formatDate(o.createdAt)}</span>
+                                ${cancelledNote}
                             </div>
                             <span class="status-pill status-${escapeHtml(st)}">${escapeHtml(st)}</span>
                         </div>
                         <div style="font-size:13px; line-height:1.55;">
                             <strong>ক্রেতা:</strong> ${escapeHtml(o.customerName)} (${escapeHtml(o.contactMobile || o.userMobile)})<br>
-                            <strong>ঠিকানা:</strong> ${escapeHtml(o.address)}<br>
-                            <strong>পেমেন্ট:</strong> ${escapeHtml(o.paymentMethod)} ${o.trxId ? `| <strong>TrxID:</strong> ${escapeHtml(o.trxId)}` : ''}
+                            <strong>ঠিকানা:</strong> ${escapeHtml(o.address)} ${o.deliveryZoneName ? `<span class="code-pill" style="background:#dcfce7; color:#166534;">${escapeHtml(o.deliveryZoneName)}</span>` : ''}<br>
+                            <strong>পেমেন্ট:</strong> ${escapeHtml(getPaymentMethodLabel(o.paymentMethod))} ${o.trxId ? `| <strong>TrxID:</strong> <span style="color:var(--primary); font-weight:700;">${escapeHtml(o.trxId)}</span>` : ''}
                         </div>
                         <div class="order-items-box">
                             ${itemsHtml}
-                            <div style="margin-top:5px; padding-top:5px; border-top:1px dashed #cbd5e1; font-weight:700; color:var(--primary);">
+                            <div style="margin-top:6px; padding-top:6px; border-top:1px dashed #cbd5e1; font-weight:700; color:var(--primary);">
                                 সাবটোটাল: ৳${o.subtotal} + ডেলিভারি: ৳${o.deliveryCharge} = সর্বমোট ৳${o.total}
                             </div>
+                            ${(advPaid > 0 || dueAmt > 0) ? `
+                                <div style="font-size:12.5px; margin-top:4px; display:flex; gap:12px; flex-wrap:wrap;">
+                                    <span style="color:#059669; font-weight:700;">অগ্রিম পরিশোধ: ৳${advPaid}</span>
+                                    <span style="color:#dc2626; font-weight:700;">বাকি (COD): ৳${dueAmt}</span>
+                                </div>
+                            ` : ''}
                         </div>
                         <div class="order-footer">
                             <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
@@ -1462,15 +1737,39 @@
         async function updateOrderStatus(orderKey, newStatus) {
             const order = ordersData[orderKey];
             if (!order) return;
+            const prevStatus = order.status || 'Pending';
             const statusLabels = {
-                Pending: 'পেন্ডিং অবস্থায় আছে।',
-                Confirmed: 'কনফার্ম করা হয়েছে! শীঘ্রই প্যাকিং শুরু হবে।',
-                Shipped: 'ডেলিভারির জন্য পাঠানো হয়েছে (Shipped)।',
-                Delivered: 'সফলভাবে ডেলিভারি সম্পন্ন হয়েছে! কেনাকাটার জন্য ধন্যবাদ।',
-                Cancelled: 'বাতিল (Cancelled) করা হয়েছে। বিস্তারিত জানতে লাইভ চ্যাটে যোগাযোগ করুন।'
+                Pending: 'পেন্ডিং অবস্থায় আছে।',
+                Confirmed: 'কনফার্ম করা হয়েছে! শীঘ্রই প্যাকিং শুরু হবে।',
+                Shipped: 'ডেলিভারির জন্য পাঠানো হয়েছে (Shipped)।',
+                Delivered: 'সফলভাবে ডেলিভারি সম্পন্ন হয়েছে! কেনাকাটার জন্য ধন্যবাদ।',
+                Cancelled: 'বাতিল (Cancelled) করা হয়েছে। বিস্তারিত জানতে লাইভ চ্যাটে যোগাযোগ করুন।'
             };
             try {
-                await fbDb.ref(`orders/${orderKey}`).update({ status: newStatus });
+                const updates = {};
+                updates[`orders/${orderKey}/status`] = newStatus;
+                if (newStatus === 'Cancelled') updates[`orders/${orderKey}/cancelledBy`] = 'admin';
+
+                if (order.userMobile) {
+                    updates[`userOrders/${order.userMobile}/${orderKey}/status`] = newStatus;
+                    if (newStatus === 'Cancelled') updates[`userOrders/${order.userMobile}/${orderKey}/cancelledBy`] = 'admin';
+                }
+
+                // অ্যাডমিন ক্যান্সেল করলে স্টক ফেরত দেওয়া
+                let stockChanged = false;
+                if (newStatus === 'Cancelled' && prevStatus !== 'Cancelled') {
+                    for (const item of (order.items || [])) {
+                        const p = productsData[item.id];
+                        if (p && p.stock !== undefined) {
+                            updates[`products/${item.id}/stock`] = Number(p.stock) + Number(item.qty || 1);
+                            stockChanged = true;
+                        }
+                    }
+                }
+                if (stockChanged) updates['meta/dataVersion'] = Date.now();
+
+                await fbDb.ref().update(updates);
+
                 if (order.userMobile) {
                     await fbDb.ref(`notifications/users/${order.userMobile}`).push({
                         title: `অর্ডার আপডেট (#${order.orderId || orderKey})`,
@@ -1479,16 +1778,16 @@
                         read: false
                     });
                 }
-                showToast(`স্ট্যাটাস "${newStatus}" আপডেট ও কাস্টমারকে নোটিফিকেশন পাঠানো হয়েছে!`, "success");
+                showToast(`স্ট্যাটাস "${newStatus}" আপডেট ও কাস্টমারকে নোটিফিকেশন পাঠানো হয়েছে!`, "success");
             } catch (e) {
-                showToast("স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে!", "error");
+                showToast("স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে!", "error");
             }
         }
 
         function deleteOrder(orderKey) {
-            showConfirm("অর্ডার ডিলিট", `অর্ডার #${orderKey} স্থায়ীভাবে মুছে ফেলতে চান?`, async () => {
+            showConfirm("অর্ডার ডিলিট", `অর্ডার #${orderKey} স্থায়ীভাবে মুছে ফেলতে চান?`, async () => {
                 await fbDb.ref(`orders/${orderKey}`).remove();
-                showToast("অর্ডার ডিলিট হয়েছে", "info");
+                showToast("অর্ডার ডিলিট হয়েছে", "info");
             });
         }
 
@@ -1496,37 +1795,51 @@
             const order = ordersData[orderKey];
             if (!order) return;
             const area = document.getElementById('receiptRenderArea');
-            const rows = (order.items || []).map(i => `
-                <tr>
-                    <td>${escapeHtml(i.name)}<br><small style="color:#64748b;">কোড: ${escapeHtml(i.code || '-')}</small></td>
-                    <td>${i.qty}</td>
-                    <td>৳${i.price * i.qty}</td>
-                </tr>
-            `).join('');
+            const rows = (order.items || []).map(i => {
+                const vTxt = formatVariantText(i);
+                return `
+                    <tr>
+                        <td>
+                            ${escapeHtml(i.name)}
+                            <br><small style="color:#64748b;">কোড: ${escapeHtml(i.code || '-')}</small>
+                            ${vTxt ? `<br><small style="color:#1d4ed8; font-weight:700;">${escapeHtml(vTxt)}</small>` : ''}
+                        </td>
+                        <td>${i.qty}</td>
+                        <td>৳${i.price * i.qty}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            const advPaid = Number(order.advancePaid || 0);
+            const dueAmt = order.dueAmount !== undefined ? Number(order.dueAmount) : (order.paymentMethod === 'COD' ? Number(order.total) : 0);
+
             area.innerHTML = `
                 <div class="receipt-box">
                     <div class="receipt-head">
                         <h2>BD UNIQUE BAZAR</h2>
-                        <div style="font-size:12px; color:#475569;">অর্ডার ইনভয়েস / ক্যাশ মেমো</div>
+                        <div style="font-size:12px; color:#475569;">অর্ডার ইনভয়েস / ক্যাশ মেমো</div>
                         <div style="font-size:12px; margin-top:4px;"><strong>আইডি:</strong> ${escapeHtml(order.orderId || orderKey)} | <strong>তারিখ:</strong> ${formatDate(order.createdAt)}</div>
                     </div>
                     <div style="font-size:13px; line-height:1.5; margin-bottom:8px;">
                         <div><strong>ক্রেতা:</strong> ${escapeHtml(order.customerName)}</div>
                         <div><strong>মোবাইল:</strong> ${escapeHtml(order.contactMobile || order.userMobile)}</div>
                         <div><strong>ঠিকানা:</strong> ${escapeHtml(order.address)}</div>
-                        <div><strong>পেমেন্ট:</strong> ${escapeHtml(order.paymentMethod)} ${order.trxId ? `(TrxID: ${escapeHtml(order.trxId)})` : ''}</div>
+                        ${order.deliveryZoneName ? `<div><strong>ডেলিভারি এরিয়া:</strong> ${escapeHtml(order.deliveryZoneName)}</div>` : ''}
+                        <div><strong>পেমেন্ট:</strong> ${escapeHtml(getPaymentMethodLabel(order.paymentMethod))} ${order.trxId ? `(TrxID: ${escapeHtml(order.trxId)})` : ''}</div>
                         <div><strong>স্ট্যাটাস:</strong> ${escapeHtml(order.status)}</div>
                     </div>
                     <table class="receipt-table">
-                        <thead><tr><th>পণ্য</th><th>পরিমাণ</th><th>মূল্য</th></tr></thead>
+                        <thead><tr><th>পণ্যের বিবরণ</th><th>পরিমাণ</th><th>মূল্য</th></tr></thead>
                         <tbody>${rows}</tbody>
                     </table>
                     <div style="border-top:2px dashed #cbd5e1; padding-top:8px; font-size:14px;">
                         <div style="display:flex; justify-content:space-between;"><span>সাবটোটাল:</span><span>৳${order.subtotal}</span></div>
                         <div style="display:flex; justify-content:space-between;"><span>ডেলিভারি চার্জ:</span><span>৳${order.deliveryCharge}</span></div>
                         <div style="display:flex; justify-content:space-between; font-weight:700; font-size:16px; color:#2563eb; margin-top:5px;">
-                            <span>সর্বমোট:</span><span>৳${order.total}</span>
+                            <span>সর্বমোট বিল:</span><span>৳${order.total}</span>
                         </div>
+                        ${advPaid > 0 ? `<div style="display:flex; justify-content:space-between; color:#059669; font-weight:700; margin-top:4px;"><span>অগ্রিম পরিশোধিত:</span><span>৳${advPaid}</span></div>` : ''}
+                        ${dueAmt > 0 ? `<div style="display:flex; justify-content:space-between; color:#dc2626; font-weight:700; margin-top:3px;"><span>বাকি / কন্ডিশন (COD):</span><span>৳${dueAmt}</span></div>` : ''}
                     </div>
                 </div>
             `;
@@ -1542,12 +1855,12 @@
                 };
                 openModal('receiptModal');
             } catch (e) {
-                showToast("রিসিট তৈরি করা যায়নি", "error");
+                showToast("রিসিট তৈরি করা যায়নি", "error");
             }
         }
 
         // ============================================================
-        // 9. PRODUCTS MANAGEMENT (5 IMGBB PHOTOS + VIDEO + AUTO CODE)
+        // 9. PRODUCTS MANAGEMENT (5 WATERMARKED PHOTOS + VARIANTS + CODE)
         // ============================================================
         function getCatName(catId) {
             const c = categoriesData[catId];
@@ -1584,16 +1897,18 @@
                 .sort((a, b) => (b[1].createdAt || 0) - (a[1].createdAt || 0));
 
             if (entries.length === 0) {
-                listEl.innerHTML = `<div class="empty-box"><i class="fas fa-box-open"></i>কোনো পণ্য পাওয়া যায়নি। নতুন পণ্য যোগ করুন।</div>`;
+                listEl.innerHTML = `<div class="empty-box"><i class="fas fa-box-open"></i>কোনো পণ্য পাওয়া যায়নি। নতুন পণ্য যোগ করুন।</div>`;
                 return;
             }
 
             listEl.innerHTML = entries.map(([id, p], idx) => {
                 const imgs = getProductImages(p);
                 const code = getProductCode(id, p);
+                const sizes = parseVariantList(p.sizes);
+                const colors = parseVariantList(p.colors);
                 return `
                     <div class="prod-row">
-                        <img src="${escapeHtml(imgs[0] || '')}" alt="" onerror="this.src='https://via.placeholder.com/80'">
+                        <img src="${escapeHtml(imgs[0] || '')}" alt="" onerror="this.src='https://placehold.co/80x80/e2e8f0/64748b?text=Img'">
                         <div class="prod-meta">
                             <div class="prod-name">
                                 ${idx < 5 && !q ? '<span class="slider-pill">স্লাইডার</span>' : ''}
@@ -1603,8 +1918,13 @@
                             <div class="prod-sub">
                                 <strong style="color:var(--primary);">৳${p.price}</strong>
                                 ${p.oldPrice ? `<s style="margin-left:4px;">৳${p.oldPrice}</s>` : ''}
-                                • ${escapeHtml(getCatName(p.category))} • স্টক: <strong>${p.stock ?? 0}</strong>
+                                • ${escapeHtml(getCatName(p.category))}
+                                • স্টক: <strong>${p.stock ?? 0}</strong>
                                 • ছবি: ${imgs.length}টি ${p.videoUrl ? '• 🎬 ভিডিও' : ''}
+                                <div>
+                                    ${sizes.length ? `<span class="variant-pill">সাইজ: ${escapeHtml(sizes.join(', '))}</span>` : ''}
+                                    ${colors.length ? `<span class="variant-pill">কালার: ${escapeHtml(colors.join(', '))}</span>` : ''}
+                                </div>
                             </div>
                         </div>
                         <div class="prod-actions">
@@ -1658,9 +1978,10 @@
             const remaining = 5 - modalProductImages.length;
             if (remaining <= 0) {
                 input.value = '';
-                return showToast("ইতিমধ্যে ৫টি ছবি যুক্ত করা হয়েছে!", "error");
+                return showToast("ইতিমধ্যে ৫টি ছবি যুক্ত করা হয়েছে!", "error");
             }
 
+            const addWatermark = document.getElementById('autoWatermarkCheck').checked;
             const toUpload = files.slice(0, remaining);
             const label = document.getElementById('multiUploadLabel');
             const origText = label.querySelector('span').innerText;
@@ -1668,21 +1989,23 @@
 
             let uploadedCount = 0;
             for (let i = 0; i < toUpload.length; i++) {
-                label.querySelector('span').innerText = `ImgBB-তে আপলোড হচ্ছে (${i + 1}/${toUpload.length})...`;
+                label.querySelector('span').innerText = `${addWatermark ? 'ওয়াটারমার্ক ও ' : ''}ImgBB আপলোড হচ্ছে (${i + 1}/${toUpload.length})...`;
                 try {
-                    const url = await uploadToImgBB(toUpload[i], 1000);
+                    const url = await uploadToImgBB(toUpload[i], 1000, addWatermark);
                     modalProductImages.push(url);
                     uploadedCount++;
                     renderMultiImageGrid();
                 } catch (err) {
-                    showToast(`ছবি ${i + 1} আপলোড ব্যর্থ হয়েছে!`, "error");
+                    showToast(`ছবি ${i + 1} আপলোড ব্যর্থ হয়েছে!`, "error");
                 }
             }
 
             label.querySelector('span').innerText = origText;
             label.style.pointerEvents = 'auto';
             input.value = '';
-            if (uploadedCount > 0) showToast(`${uploadedCount}টি ছবি সফলভাবে ImgBB-তে আপলোড হয়েছে!`, "success");
+            if (uploadedCount > 0) {
+                showToast(`${uploadedCount}টি ছবি ${addWatermark ? 'ওয়াটারমার্কসহ ' : ''}ImgBB-তে আপলোড হয়েছে!`, "success");
+            }
         }
 
         function regenerateProductCode() {
@@ -1694,6 +2017,7 @@
             document.getElementById('prodMultiFileInput').value = '';
             document.getElementById('manualImgUrlInput').value = '';
             document.getElementById('bumpToSliderCheck').checked = false;
+            document.getElementById('autoWatermarkCheck').checked = true;
 
             if (prodId && productsData[prodId]) {
                 const p = productsData[prodId];
@@ -1705,6 +2029,8 @@
                 document.getElementById('prodOldPrice').value = p.oldPrice || '';
                 document.getElementById('prodStock').value = p.stock ?? 0;
                 document.getElementById('prodCategory').value = p.category || '';
+                document.getElementById('prodSizes').value = parseVariantList(p.sizes).join(', ');
+                document.getElementById('prodColors').value = parseVariantList(p.colors).join(', ');
                 document.getElementById('prodVideoUrl').value = p.videoUrl || '';
                 document.getElementById('prodDesc').value = p.description || '';
                 document.getElementById('bumpSliderWrap').style.display = 'block';
@@ -1717,6 +2043,8 @@
                 document.getElementById('prodPrice').value = '';
                 document.getElementById('prodOldPrice').value = '';
                 document.getElementById('prodStock').value = '10';
+                document.getElementById('prodSizes').value = '';
+                document.getElementById('prodColors').value = '';
                 document.getElementById('prodVideoUrl').value = '';
                 document.getElementById('prodDesc').value = '';
                 document.getElementById('bumpSliderWrap').style.display = 'none';
@@ -1735,12 +2063,14 @@
             const oldPrice = oldPriceVal ? Number(oldPriceVal) : null;
             const stock = Number(document.getElementById('prodStock').value);
             const category = document.getElementById('prodCategory').value;
+            const sizes = parseVariantList(document.getElementById('prodSizes').value);
+            const colors = parseVariantList(document.getElementById('prodColors').value);
             const videoUrl = document.getElementById('prodVideoUrl').value.trim();
             const description = document.getElementById('prodDesc').value.trim();
             const bumpSlider = document.getElementById('bumpToSliderCheck').checked;
 
             if (modalProductImages.length === 0) return showToast("কমপক্ষে ১টি পণ্যের ছবি আপলোড করুন", "error");
-            if (!name || !price || !category) return showToast("পণ্যের নাম, বিক্রয় মূল্য ও ক্যাটাগরি দিন", "error");
+            if (!name || !price || !category) return showToast("পণ্যের নাম, বিক্রয় মূল্য ও ক্যাটাগরি দিন", "error");
 
             const btn = document.getElementById('saveProdBtn');
             btn.disabled = true;
@@ -1753,6 +2083,8 @@
                 oldPrice,
                 stock: isNaN(stock) ? 0 : stock,
                 category,
+                sizes,
+                colors,
                 image: modalProductImages[0],
                 images: modalProductImages,
                 videoUrl,
@@ -1763,10 +2095,11 @@
             const id = editId || ('prod_' + Date.now());
             try {
                 await fbDb.ref(`products/${id}`).set(payload);
-                showToast(editId ? `পণ্য (${code}) আপডেট হয়েছে!` : `নতুন পণ্য (${code}) লাইভ হয়েছে!`, "success");
+                await bumpDataVersion();
+                showToast(editId ? `পণ্য (${code}) আপডেট হয়েছে!` : `নতুন পণ্য (${code}) লাইভ হয়েছে!`, "success");
                 closeModal('productModal');
             } catch (e) {
-                showToast("পণ্য সেভ করা যায়নি! Firebase Rules চেক করুন।", "error");
+                showToast("পণ্য সেভ করা যায়নি! Firebase Rules চেক করুন।", "error");
             } finally {
                 btn.disabled = false;
             }
@@ -1774,14 +2107,15 @@
 
         function deleteProduct(id) {
             const name = productsData[id]?.name || id;
-            showConfirm("পণ্য ডিলিট", `"${name}" পণ্যটি স্থায়ীভাবে মুছে ফেলতে চান?`, async () => {
+            showConfirm("পণ্য ডিলিট", `"${name}" পণ্যটি স্থায়ীভাবে মুছে ফেলতে চান?`, async () => {
                 await fbDb.ref(`products/${id}`).remove();
-                showToast("পণ্য ডিলিট হয়েছে", "info");
+                await bumpDataVersion();
+                showToast("পণ্য ডিলিট হয়েছে", "info");
             });
         }
 
         // ============================================================
-        // 10. DYNAMIC CATEGORIES (85+ SEARCHABLE ICONS)
+        // 10. DYNAMIC CATEGORIES
         // ============================================================
         function renderIconPicker() {
             const box = document.getElementById('iconPicker');
@@ -1862,22 +2196,24 @@
             const catId = editId || ('cat_' + Date.now());
             try {
                 await fbDb.ref(`categories/${catId}`).set({ name, icon });
+                await bumpDataVersion();
                 resetCategoryForm();
-                showToast("ক্যাটাগরি রিয়েল-টাইম আপডেট হয়েছে!", "success");
+                showToast("ক্যাটাগরি রিয়েল-টাইম আপডেট হয়েছে!", "success");
             } catch (e) {
-                showToast("ক্যাটাগরি সেভ করা যায়নি!", "error");
+                showToast("ক্যাটাগরি সেভ করা যায়নি!", "error");
             }
         }
 
         function deleteCategory(id) {
             showConfirm("ক্যাটাগরি ডিলিট", `ক্যাটাগরিটি মুছে ফেলতে চান?`, async () => {
                 await fbDb.ref(`categories/${id}`).remove();
-                showToast("ক্যাটাগরি ডিলিট হয়েছে", "info");
+                await bumpDataVersion();
+                showToast("ক্যাটাগরি ডিলিট হয়েছে", "info");
             });
         }
 
         // ============================================================
-        // 11. LIVE CHAT REPLY (IMGBB IMAGES + CLICKABLE PRODUCT CODES)
+        // 11. SERIAL SMS / LIVE CHAT INBOX & DETAIL PAGE (WITH × EXIT)
         // ============================================================
         function highlightProductCodesInMessage(rawText) {
             const safe = escapeHtml(rawText);
@@ -1889,29 +2225,40 @@
 
         function renderChatUsersList() {
             const box = document.getElementById('chatUsersList');
+            const q = (document.getElementById('chatSearchInput')?.value || '').trim().toLowerCase();
+
             const list = Object.entries(chatsData)
-                .map(([mobile, data]) => ({
-                    mobile,
-                    name: data.meta?.customerName || usersData[mobile]?.name || mobile,
-                    lastMessage: data.meta?.lastMessage || 'মেসেজ দেখুন...',
-                    lastTime: data.meta?.lastTime || 0,
-                    unread: Boolean(data.meta?.unreadAdmin)
-                }))
+                .map(([mobile, data]) => {
+                    const msgs = data.messages ? Object.values(data.messages) : [];
+                    const lastMsgObj = msgs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))[0];
+                    return {
+                        mobile,
+                        name: data.meta?.customerName || usersData[mobile]?.name || mobile,
+                        lastMessage: data.meta?.lastMessage || lastMsgObj?.text || (lastMsgObj?.imageUrl ? '📷 ছবি পাঠিয়েছে' : 'মেসেজ দেখুন...'),
+                        lastTime: data.meta?.lastTime || lastMsgObj?.timestamp || 0,
+                        msgCount: msgs.length,
+                        unread: Boolean(data.meta?.unreadAdmin)
+                    };
+                })
+                .filter(c => !q || c.name.toLowerCase().includes(q) || c.mobile.includes(q) || c.lastMessage.toLowerCase().includes(q))
                 .sort((a, b) => b.lastTime - a.lastTime);
 
             if (list.length === 0) {
-                box.innerHTML = `<div class="empty-box"><i class="fas fa-comments"></i>কোনো চ্যাট নেই।</div>`;
+                box.innerHTML = `<div class="empty-box"><i class="fas fa-envelope-open"></i>কোনো এসএমএস / চ্যাট পাওয়া যায়নি।</div>`;
                 return;
             }
-            box.innerHTML = list.map(c => `
-                <div class="chat-user-row ${activeChatMobile === c.mobile ? 'active' : ''}" onclick="openCustomerChat('${c.mobile}')">
-                    <div style="min-width:0; flex:1;">
-                        <div style="font-weight:700; font-size:14px;">${escapeHtml(c.name)}</div>
-                        <div style="font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                            ${escapeHtml(c.lastMessage)}
+
+            box.innerHTML = list.map((c, idx) => `
+                <div class="sms-sender-row ${c.unread ? 'unread' : ''}" onclick="openCustomerChat('${escapeHtml(c.mobile)}')">
+                    <div class="sms-serial-num">${idx + 1}</div>
+                    <div class="sms-sender-info">
+                        <div class="sms-sender-top">
+                            <div class="sms-sender-name">${escapeHtml(c.name)} <span style="font-weight:500; font-size:12px; color:var(--muted);">(${escapeHtml(c.mobile)})</span></div>
+                            <span class="sms-sender-time">${formatDate(c.lastTime)}</span>
                         </div>
+                        <div class="sms-sender-sub">${escapeHtml(c.lastMessage)}</div>
                     </div>
-                    ${c.unread ? '<span class="unread-dot"></span>' : ''}
+                    ${c.unread ? '<span class="sms-new-pill">নতুন</span>' : '<i class="fas fa-chevron-right" style="color:#94a3b8; font-size:13px;"></i>'}
                 </div>
             `).join('');
         }
@@ -1922,19 +2269,13 @@
             document.getElementById('activeChatName').innerText = name;
             document.getElementById('activeChatMobile').innerText = mobile;
 
-            const callBtn = document.getElementById('chatCallBtn');
-            callBtn.style.display = 'inline-flex';
-            callBtn.onclick = () => { window.location.href = `tel:${mobile}`; };
+            document.getElementById('chatCallBtn').onclick = () => { window.location.href = `tel:${mobile}`; };
+            document.getElementById('chatDeleteBtn').onclick = () => deleteCustomerChatThread(mobile, name);
 
-            document.getElementById('adminChatInput').disabled = false;
-            document.getElementById('adminChatSendBtn').disabled = false;
-            const imgLbl = document.getElementById('adminChatImgLabel');
-            imgLbl.style.opacity = '1';
-            imgLbl.style.pointerEvents = 'auto';
-
+            // আনরিড মার্ক ক্লিয়ার
             fbDb.ref(`chats/${mobile}/meta`).update({ unreadAdmin: false });
-            renderChatUsersList();
 
+            // পুরোনো লিসেনার বন্ধ করে নতুন লিসেনার চালু
             if (activeChatRef && activeChatHandler) activeChatRef.off('value', activeChatHandler);
             activeChatRef = fbDb.ref(`chats/${mobile}/messages`);
             activeChatHandler = (snap) => {
@@ -1942,7 +2283,7 @@
                 msgBox.innerHTML = '';
                 const arr = Object.values(snap.val() || {}).sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
                 if (arr.length === 0) {
-                    msgBox.innerHTML = `<div class="empty-box">কোনো মেসেজ নেই।</div>`;
+                    msgBox.innerHTML = `<div class="empty-box"><i class="fas fa-comments"></i>কোনো মেসেজ নেই। নিচে লিখে রিপ্লাই দিন।</div>`;
                     return;
                 }
                 arr.forEach(m => {
@@ -1958,6 +2299,31 @@
                 msgBox.scrollTop = msgBox.scrollHeight;
             };
             activeChatRef.on('value', activeChatHandler);
+
+            document.getElementById('smsDetailOverlay').style.display = 'flex';
+            document.getElementById('adminChatInput').focus();
+        }
+
+        function closeChatDetailPage() {
+            document.getElementById('smsDetailOverlay').style.display = 'none';
+            if (activeChatRef && activeChatHandler) {
+                activeChatRef.off('value', activeChatHandler);
+                activeChatRef = null;
+                activeChatHandler = null;
+            }
+            activeChatMobile = null;
+        }
+
+        function deleteCustomerChatThread(mobile, name) {
+            showConfirm("চ্যাট ডিলিট", `${name} (${mobile})-এর সম্পূর্ণ চ্যাট হিস্ট্রি মুছে ফেলতে চান?`, async () => {
+                try {
+                    await fbDb.ref(`chats/${mobile}`).remove();
+                    closeChatDetailPage();
+                    showToast("চ্যাট হিস্ট্রি মুছে ফেলা হয়েছে", "info");
+                } catch (e) {
+                    showToast("চ্যাট ডিলিট করা যায়নি!", "error");
+                }
+            });
         }
 
         async function sendAdminReply() {
@@ -1970,10 +2336,12 @@
             try {
                 await fbDb.ref(`chats/${activeChatMobile}/messages`).push({ sender: 'admin', text, timestamp: now });
                 await fbDb.ref(`chats/${activeChatMobile}/meta`).update({
+                    customerMobile: activeChatMobile,
+                    customerName: chatsData[activeChatMobile]?.meta?.customerName || usersData[activeChatMobile]?.name || activeChatMobile,
                     lastMessage: `অ্যাডমিন: ${text}`, lastTime: now, unreadAdmin: false
                 });
             } catch (e) {
-                showToast("রিপ্লাই পাঠানো যায়নি!", "error");
+                showToast("রিপ্লাই পাঠানো যায়নি!", "error");
             }
         }
 
@@ -1983,15 +2351,15 @@
             input.value = '';
             try {
                 showToast("ছবি ImgBB-তে আপলোড হচ্ছে...", "info");
-                const imageUrl = await uploadToImgBB(file, 900);
+                const imageUrl = await uploadToImgBB(file, 900, false);
                 const now = Date.now();
                 await fbDb.ref(`chats/${activeChatMobile}/messages`).push({ sender: 'admin', imageUrl, text: '', timestamp: now });
                 await fbDb.ref(`chats/${activeChatMobile}/meta`).update({
-                    lastMessage: "অ্যাডমিন: 📷 ছবি পাঠিয়েছেন", lastTime: now, unreadAdmin: false
+                    lastMessage: "অ্যাডমিন: 📷 ছবি পাঠিয়েছেন", lastTime: now, unreadAdmin: false
                 });
-                showToast("ছবি পাঠানো হয়েছে!", "success");
+                showToast("ছবি পাঠানো হয়েছে!", "success");
             } catch (e) {
-                showToast("ছবি পাঠানো যায়নি!", "error");
+                showToast("ছবি পাঠানো যায়নি!", "error");
             }
         }
 
@@ -2019,15 +2387,16 @@
             try {
                 if (target === 'global') {
                     await fbDb.ref('notifications/global').push({ title, message, timestamp: Date.now() });
-                    showToast("সব কাস্টমারের জন্য নোটিফিকেশন পাঠানো হয়েছে!", "success");
+                    await bumpDataVersion();
+                    showToast("সব কাস্টমারের জন্য নোটিফিকেশন পাঠানো হয়েছে!", "success");
                 } else {
                     await fbDb.ref(`notifications/users/${mobile}`).push({ title, message, timestamp: Date.now(), read: false });
-                    showToast(`${mobile} নম্বরে নোটিফিকেশন পাঠানো হয়েছে!`, "success");
+                    showToast(`${mobile} নম্বরে নোটিফিকেশন পাঠানো হয়েছে!`, "success");
                 }
                 document.getElementById('notifTitleInput').value = '';
                 document.getElementById('notifMsgInput').value = '';
             } catch (e) {
-                showToast("নোটিফিকেশন পাঠানো যায়নি!", "error");
+                showToast("নোটিফিকেশন পাঠানো যায়নি!", "error");
             }
         }
 
@@ -2055,7 +2424,8 @@
         function deleteGlobalNotif(id) {
             showConfirm("নোটিফিকেশন ডিলিট", "এই নোটিফিকেশনটি মুছে ফেলতে চান?", async () => {
                 await fbDb.ref(`notifications/global/${id}`).remove();
-                showToast("নোটিফিকেশন ডিলিট হয়েছে", "info");
+                await bumpDataVersion();
+                showToast("নোটিফিকেশন ডিলিট হয়েছে", "info");
             });
         }
 
@@ -2071,7 +2441,7 @@
                 .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
             if (list.length === 0) {
-                box.innerHTML = `<div class="empty-box"><i class="fas fa-users"></i>কোনো ক্রেতা পাওয়া যায়নি।</div>`;
+                box.innerHTML = `<div class="empty-box"><i class="fas fa-users"></i>কোনো ক্রেতা পাওয়া যায়নি।</div>`;
                 return;
             }
             box.innerHTML = list.map(u => `
@@ -2081,8 +2451,8 @@
                         <div class="prod-sub">গ্রাম: ${escapeHtml(u.village || '-')}, থানা: ${escapeHtml(u.thana || '-')}, জেলা: ${escapeHtml(u.district || '-')}</div>
                     </div>
                     <div class="prod-actions">
-                        <button class="btn btn-outline btn-sm" onclick="quickNotifyUser('${u.mobile}')"><i class="fas fa-bell"></i></button>
-                        <button class="btn btn-primary btn-sm" onclick="switchTab('chats'); openCustomerChat('${u.mobile}');"><i class="fas fa-comment"></i></button>
+                        <button class="btn btn-outline btn-sm" onclick="quickNotifyUser('${escapeHtml(u.mobile)}')"><i class="fas fa-bell"></i></button>
+                        <button class="btn btn-primary btn-sm" onclick="switchTab('chats'); openCustomerChat('${escapeHtml(u.mobile)}');"><i class="fas fa-comment"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -2124,30 +2494,92 @@
         function deleteReview(prodId, revId) {
             showConfirm("রিভিউ ডিলিট", "এই রিভিউটি মুছে ফেলতে চান?", async () => {
                 await fbDb.ref(`reviews/${prodId}/${revId}`).remove();
-                showToast("রিভিউ ডিলিট হয়েছে", "info");
+                await bumpDataVersion();
+                showToast("রিভিউ ডিলিট হয়েছে", "info");
             });
         }
 
         // ============================================================
-        // 14. SETTINGS, VERSIONING & JSON BACKUP
+        // 14. SETTINGS, DELIVERY ZONES, ANTI-FAKE TOGGLE & BACKUP
         // ============================================================
+        function updateAdvanceToggleBadge() {
+            const on = document.getElementById('setRequireAdvanceDelivery').checked;
+            const badge = document.getElementById('advToggleStatusBadge');
+            badge.innerText = on ? 'বর্তমানে: চালু (ডেলিভারি চার্জ অগ্রিম)' : 'বর্তমানে: বন্ধ (স্বাভাবিক COD)';
+            badge.style.background = on ? '#dcfce7' : '#e2e8f0';
+            badge.style.color = on ? '#166534' : '#334155';
+        }
+
+        function renderDeliveryZonesEditor() {
+            const box = document.getElementById('deliveryZonesEditor');
+            if (editableDeliveryZones.length === 0) {
+                editableDeliveryZones = [
+                    { id: 'inside_dhaka', name: 'ঢাকার ভিতরে', charge: 60 },
+                    { id: 'outside_dhaka', name: 'ঢাকার বাইরে (সারাদেশ)', charge: 120 }
+                ];
+            }
+            box.innerHTML = editableDeliveryZones.map((z, idx) => `
+                <div class="zone-edit-row">
+                    <input type="text" class="form-control" style="padding:8px 10px; font-size:13px;" value="${escapeHtml(z.name)}" placeholder="এরিয়ার নাম (যেমন: ঢাকার ভিতরে)" oninput="editableDeliveryZones[${idx}].name = this.value">
+                    <input type="number" class="form-control" style="padding:8px 10px; font-size:13px;" value="${Number(z.charge) || 0}" placeholder="চার্জ ৳" oninput="editableDeliveryZones[${idx}].charge = Number(this.value) || 0">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeDeliveryZoneRow(${idx})" title="মুছুন"><i class="fas fa-times"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function addDeliveryZoneRow() {
+            editableDeliveryZones.push({ id: 'zone_' + Date.now(), name: '', charge: 100 });
+            renderDeliveryZonesEditor();
+        }
+
+        function removeDeliveryZoneRow(idx) {
+            if (editableDeliveryZones.length <= 1) {
+                return showToast("কমপক্ষে ১টি ডেলিভারি এরিয়া থাকতে হবে!", "error");
+            }
+            editableDeliveryZones.splice(idx, 1);
+            renderDeliveryZonesEditor();
+        }
+
         function populateSettingsForm() {
             document.getElementById('setLogoUrl').value = settingsData.logoUrl || '';
             document.getElementById('setNoticeText').value = settingsData.noticeText || '';
-            document.getElementById('setDeliveryCharge').value = settingsData.deliveryCharge ?? 60;
             document.getElementById('setBkash').value = settingsData.bkashNumber || '';
             document.getElementById('setNagad').value = settingsData.nagadNumber || '';
-            document.getElementById('setAppVersion').value = settingsData.appVersion || '2.0.0';
+            document.getElementById('setAppVersion').value = settingsData.appVersion || '2.1.0';
+            document.getElementById('setRequireAdvanceDelivery').checked = Boolean(settingsData.requireAdvanceDelivery);
+            updateAdvanceToggleBadge();
+
+            // ডেলিভারি জোন লোড
+            const rawZones = settingsData.deliveryZones;
+            let parsedZones = [];
+            if (Array.isArray(rawZones)) parsedZones = rawZones;
+            else if (rawZones && typeof rawZones === 'object') parsedZones = Object.values(rawZones);
+
+            if (parsedZones.length > 0) {
+                editableDeliveryZones = parsedZones.map((z, idx) => ({
+                    id: z.id || ('zone_' + idx),
+                    name: String(z.name || ''),
+                    charge: Number(z.charge) || 0
+                }));
+            } else {
+                const legacyCharge = settingsData.deliveryCharge !== undefined ? Number(settingsData.deliveryCharge) : 60;
+                editableDeliveryZones = [
+                    { id: 'inside_dhaka', name: 'ঢাকার ভিতরে', charge: legacyCharge },
+                    { id: 'outside_dhaka', name: 'ঢাকার বাইরে (সারাদেশ)', charge: Math.max(legacyCharge, 120) }
+                ];
+            }
+            renderDeliveryZonesEditor();
+
             if (settingsData.logoUrl) document.getElementById('adminHeaderLogo').src = settingsData.logoUrl;
         }
 
         function bumpAppVersion() {
             const input = document.getElementById('setAppVersion');
-            const parts = (input.value.trim() || '2.0.0').split('.').map(n => parseInt(n, 10) || 0);
+            const parts = (input.value.trim() || '2.1.0').split('.').map(n => parseInt(n, 10) || 0);
             while (parts.length < 3) parts.push(0);
             parts[2] += 1;
             input.value = parts.join('.');
-            showToast(`নতুন ভার্সন ${input.value} সেট করা হয়েছে—এখন সেভ বাটনে ক্লিক করুন`, "info");
+            showToast(`নতুন ভার্সন ${input.value} সেট করা হয়েছে—এখন সেভ বাটনে ক্লিক করুন`, "info");
         }
 
         async function handleLogoFileUpload(input) {
@@ -2155,30 +2587,45 @@
             if (!file) return;
             try {
                 showToast("লোগো ImgBB-তে আপলোড হচ্ছে...", "info");
-                const url = await uploadToImgBB(file, 360);
+                const url = await uploadToImgBB(file, 360, false);
                 document.getElementById('setLogoUrl').value = url;
                 document.getElementById('adminHeaderLogo').src = url;
                 showToast("লোগো আপলোড সফল! এখন সেভ বাটনে ক্লিক করুন।", "success");
             } catch (e) {
-                showToast("লোগো আপলোড করা যায়নি!", "error");
+                showToast("লোগো আপলোড করা যায়নি!", "error");
             }
         }
 
         async function saveShopSettings() {
+            const cleanZones = editableDeliveryZones
+                .map((z, idx) => ({
+                    id: z.id || ('zone_' + idx),
+                    name: String(z.name || '').trim(),
+                    charge: Number(z.charge) || 0
+                }))
+                .filter(z => z.name.length > 0);
+
+            if (cleanZones.length === 0) {
+                return showToast("কমপক্ষে ১টি ডেলিভারি এরিয়ার নাম ও চার্জ দিন!", "error");
+            }
+
             const payload = {
                 shopName: "BD UNIQUE BAZAR",
                 logoUrl: document.getElementById('setLogoUrl').value.trim(),
                 noticeText: document.getElementById('setNoticeText').value.trim(),
-                deliveryCharge: Number(document.getElementById('setDeliveryCharge').value || 0),
+                deliveryCharge: cleanZones[0].charge,
+                deliveryZones: cleanZones,
+                requireAdvanceDelivery: document.getElementById('setRequireAdvanceDelivery').checked,
                 bkashNumber: document.getElementById('setBkash').value.trim(),
                 nagadNumber: document.getElementById('setNagad').value.trim(),
-                appVersion: document.getElementById('setAppVersion').value.trim() || '2.0.0'
+                appVersion: document.getElementById('setAppVersion').value.trim() || '2.1.0'
             };
             try {
                 await fbDb.ref('settings').update(payload);
-                showToast("শপ সেটিংস ও ভার্সন আপডেট হয়েছে!", "success");
+                await bumpDataVersion();
+                showToast("শপ, ডেলিভারি জোন ও ভুয়া অর্ডার সেটিংস আপডেট হয়েছে!", "success");
             } catch (e) {
-                showToast("সেটিংস সেভ করা যায়নি!", "error");
+                showToast("সেটিংস সেভ করা যায়নি!", "error");
             }
         }
 
@@ -2192,9 +2639,9 @@
                 a.download = `BD_UNIQUE_BAZAR_BACKUP_${new Date().toISOString().slice(0, 10)}.json`;
                 a.click();
                 URL.revokeObjectURL(url);
-                showToast("JSON ব্যাকআপ ডাউনলোড হয়েছে!", "success");
+                showToast("JSON ব্যাকআপ ডাউনলোড হয়েছে!", "success");
             } catch (e) {
-                showToast("ব্যাকআপ তৈরি করতে সমস্যা হয়েছে!", "error");
+                showToast("ব্যাকআপ তৈরি করতে সমস্যা হয়েছে!", "error");
             }
         }
 
@@ -2205,12 +2652,13 @@
             reader.onload = (e) => {
                 try {
                     const parsed = JSON.parse(e.target.result);
-                    showConfirm("ডাটাবেইজ ইমপোর্ট", "নতুন JSON ডাটা ইমপোর্ট করলে বর্তমান ডাটা রিপ্লেস হয়ে যাবে। নিশ্চিত?", async () => {
+                    showConfirm("ডাটাবেইজ ইমপোর্ট", "নতুন JSON ডাটা ইমপোর্ট করলে বর্তমান ডাটা রিপ্লেস হয়ে যাবে। নিশ্চিত?", async () => {
                         await fbDb.ref('/').set(parsed);
-                        showToast("ডাটাবেইজ রিস্টোর হয়েছে!", "success");
+                        await bumpDataVersion();
+                        showToast("ডাটাবেইজ রিস্টোর হয়েছে!", "success");
                     });
                 } catch (err) {
-                    showToast("JSON ফাইলটি সঠিক নয়!", "error");
+                    showToast("JSON ফাইলটি সঠিক নয়!", "error");
                 }
                 input.value = '';
             };
